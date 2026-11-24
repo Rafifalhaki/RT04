@@ -233,10 +233,11 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ----------------------------------------------------------------------------
-  // 2. PROFIL & STRUKTUR PENGURUS
+  // 2. PROFIL & STRUKTUR PENGURUS (DENGAN DUKUNGAN CRUD ADMIN)
   // ----------------------------------------------------------------------------
   const initProfilAndPengurus = () => {
     const { visiMisi, penasehat, pengurusInti, seksiKerja } = currentData;
+    const isAuth = isAdminLoggedIn();
 
     const visiEl = document.getElementById('profil-visi');
     if (visiEl) visiEl.textContent = `"${visiMisi.visi}"`;
@@ -253,26 +254,275 @@ document.addEventListener('DOMContentLoaded', () => {
       `).join('');
     }
 
+    // Modal elements
+    const modalPengurusForm = document.getElementById('modal-pengurus-form');
+    const modalPengurusClose = document.getElementById('modal-pengurus-close');
+    const btnCancelPengurus = document.getElementById('btn-cancel-pengurus');
+    const formCrudPengurus = document.getElementById('form-crud-pengurus');
+    const btnHapusPengurus = document.getElementById('btn-hapus-pengurus');
+    const inputTipe = document.getElementById('pengurus-input-tipe');
+    const inputNama = document.getElementById('pengurus-input-nama');
+    const inputJabatan = document.getElementById('pengurus-input-jabatan');
+    const inputWa = document.getElementById('pengurus-input-wa');
+    const inputTugas = document.getElementById('pengurus-input-tugas');
+    const inputSubbidang = document.getElementById('pengurus-input-subbidang');
+    const inputBlok = document.getElementById('pengurus-input-blok');
+    const wrapperWa = document.getElementById('wrapper-pengurus-wa');
+    const wrapperTugas = document.getElementById('wrapper-pengurus-tugas');
+    const wrapperSubbidang = document.getElementById('wrapper-pengurus-subbidang');
+    const wrapperBlok = document.getElementById('wrapper-pengurus-blok');
+    const editType = document.getElementById('pengurus-edit-type');
+    const editId = document.getElementById('pengurus-edit-id');
+    const modalTitle = document.getElementById('modal-pengurus-title');
+
+    const updateFieldVisibility = () => {
+      const tipe = inputTipe ? inputTipe.value : 'pengurusInti';
+      if (tipe === 'penasehat') {
+        if (wrapperWa) wrapperWa.classList.add('hidden');
+        if (wrapperTugas) wrapperTugas.classList.add('hidden');
+        if (wrapperSubbidang) wrapperSubbidang.classList.add('hidden');
+        if (wrapperBlok) wrapperBlok.classList.add('hidden');
+      } else if (tipe === 'pengurusInti') {
+        if (wrapperWa) wrapperWa.classList.remove('hidden');
+        if (wrapperTugas) wrapperTugas.classList.remove('hidden');
+        if (wrapperSubbidang) wrapperSubbidang.classList.add('hidden');
+        if (wrapperBlok) wrapperBlok.classList.add('hidden');
+      } else if (tipe === 'seksiKerja') {
+        if (wrapperWa) wrapperWa.classList.remove('hidden');
+        if (wrapperTugas) wrapperTugas.classList.remove('hidden');
+        if (wrapperSubbidang) wrapperSubbidang.classList.remove('hidden');
+        if (wrapperBlok) wrapperBlok.classList.remove('hidden');
+      }
+    };
+
+    if (inputTipe) {
+      inputTipe.onchange = updateFieldVisibility;
+    }
+
+    const openPengurusModal = (mode, type, data, idx) => {
+      if (!modalPengurusForm) return;
+
+      if (mode === 'add') {
+        if (modalTitle) modalTitle.textContent = 'Tambah Pengurus Baru';
+        if (editType) editType.value = type || 'pengurusInti';
+        if (editId) editId.value = '';
+        if (inputTipe) {
+          inputTipe.value = type || 'pengurusInti';
+          inputTipe.disabled = false;
+        }
+        if (inputNama) inputNama.value = '';
+        if (inputJabatan) inputJabatan.value = '';
+        if (inputWa) inputWa.value = '';
+        if (inputTugas) inputTugas.value = '';
+        if (inputSubbidang) inputSubbidang.value = '';
+        if (inputBlok) inputBlok.value = '';
+        if (btnHapusPengurus) btnHapusPengurus.classList.add('hidden');
+      } else {
+        const titleName = data.nama || data.koordinator || 'Pengurus';
+        if (modalTitle) modalTitle.textContent = `Edit Pengurus: ${titleName}`;
+        if (editType) editType.value = type;
+        if (editId) editId.value = String(idx !== undefined ? idx : '');
+        if (inputTipe) {
+          inputTipe.value = type;
+          inputTipe.disabled = true;
+        }
+        if (btnHapusPengurus) btnHapusPengurus.classList.remove('hidden');
+
+        if (type === 'penasehat') {
+          if (inputNama) inputNama.value = data.nama || '';
+          if (inputJabatan) inputJabatan.value = data.jabatan || '';
+          if (inputWa) inputWa.value = '';
+          if (inputTugas) inputTugas.value = '';
+        } else if (type === 'pengurusInti') {
+          if (inputNama) inputNama.value = data.nama || '';
+          if (inputJabatan) inputJabatan.value = data.jabatan || '';
+          if (inputWa) inputWa.value = data.whatsapp || '';
+          if (inputTugas) inputTugas.value = data.tugas || '';
+        } else if (type === 'seksiKerja') {
+          if (inputNama) inputNama.value = data.koordinator || '';
+          if (inputJabatan) inputJabatan.value = data.namaSeksi || '';
+          if (inputWa) inputWa.value = data.whatsapp || '';
+          if (inputTugas) inputTugas.value = data.keterangan || '';
+          if (inputSubbidang) inputSubbidang.value = (data.subBidang || []).join('\n');
+          if (inputBlok) {
+            inputBlok.value = (data.perwakilanBlok || []).map(b => `${b.blok}: ${b.nama}`).join('\n');
+          }
+        }
+      }
+
+      updateFieldVisibility();
+      modalPengurusForm.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      refreshIcons();
+    };
+
+    const closePengurusModal = () => {
+      if (!modalPengurusForm) return;
+      modalPengurusForm.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    if (modalPengurusClose) modalPengurusClose.onclick = closePengurusModal;
+    if (btnCancelPengurus) btnCancelPengurus.onclick = closePengurusModal;
+
+    // Tombol Tambah Pengurus
+    const btnTambahPengurus = document.getElementById('btn-tambah-pengurus');
+    const toolbarBtnPengurus = document.getElementById('toolbar-btn-kelola-pengurus');
+    if (btnTambahPengurus) {
+      btnTambahPengurus.onclick = () => openPengurusModal('add', 'pengurusInti');
+    }
+    if (toolbarBtnPengurus) {
+      toolbarBtnPengurus.onclick = () => openPengurusModal('add', 'pengurusInti');
+    }
+
+    // Submit handler
+    if (formCrudPengurus) {
+      formCrudPengurus.onsubmit = (e) => {
+        e.preventDefault();
+        const tipe = inputTipe ? inputTipe.value : 'pengurusInti';
+        const rawIdx = editId ? editId.value : '';
+        const isEditing = rawIdx !== '';
+        const idx = isEditing ? parseInt(rawIdx, 10) : -1;
+
+        const nama = inputNama.value.trim();
+        const jabatan = inputJabatan.value.trim();
+        const cleanWa = inputWa.value.trim().replace(/[^0-9]/g, '');
+        const tugas = inputTugas.value.trim();
+
+        if (!nama || !jabatan) {
+          alert('Mohon isi nama dan jabatan.');
+          return;
+        }
+
+        if (tipe === 'penasehat') {
+          if (isEditing && currentData.penasehat[idx]) {
+            currentData.penasehat[idx].nama = nama;
+            currentData.penasehat[idx].jabatan = jabatan;
+          } else {
+            if (!currentData.penasehat) currentData.penasehat = [];
+            currentData.penasehat.push({ nama, jabatan });
+          }
+        } else if (tipe === 'pengurusInti') {
+          if (isEditing && currentData.pengurusInti[idx]) {
+            currentData.pengurusInti[idx].nama = nama;
+            currentData.pengurusInti[idx].jabatan = jabatan;
+            currentData.pengurusInti[idx].whatsapp = cleanWa || '6281200000000';
+            currentData.pengurusInti[idx].tugas = tugas;
+          } else {
+            if (!currentData.pengurusInti) currentData.pengurusInti = [];
+            currentData.pengurusInti.push({
+              id: 'pengurus-' + Date.now(),
+              nama,
+              jabatan,
+              whatsapp: cleanWa || '6281200000000',
+              tugas: tugas || 'Membantu pengelolaan organisasi RT 04.'
+            });
+          }
+        } else if (tipe === 'seksiKerja') {
+          const subBidang = (inputSubbidang ? inputSubbidang.value : '')
+            .split('\n')
+            .map(s => s.trim().replace(/^[-*•]\s*/, ''))
+            .filter(Boolean);
+
+          const perwakilanBlok = (inputBlok ? inputBlok.value : '')
+            .split('\n')
+            .map(line => {
+              const parts = line.split(/[:=-]/);
+              if (parts.length >= 2) {
+                return {
+                  blok: parts[0].trim(),
+                  nama: parts.slice(1).join(':').trim()
+                };
+              }
+              return null;
+            })
+            .filter(Boolean);
+
+          const seksiObj = {
+            namaSeksi: jabatan,
+            koordinator: nama,
+            whatsapp: cleanWa || '6281200000000',
+            subBidang: subBidang.length > 0 ? subBidang : ['koordinasi warga'],
+            perwakilanBlok: perwakilanBlok,
+            keterangan: tugas || `Penanggung jawab bidang ${jabatan}`
+          };
+
+          if (isEditing && currentData.seksiKerja[idx]) {
+            currentData.seksiKerja[idx] = seksiObj;
+          } else {
+            if (!currentData.seksiKerja) currentData.seksiKerja = [];
+            currentData.seksiKerja.push(seksiObj);
+          }
+        }
+
+        saveData(currentData);
+        showToast(`Data pengurus "${nama}" berhasil disimpan.`);
+        closePengurusModal();
+        initProfilAndPengurus();
+      };
+    }
+
+    // Tombol Hapus Pengurus
+    if (btnHapusPengurus) {
+      btnHapusPengurus.onclick = () => {
+        const tipe = editType ? editType.value : '';
+        const rawIdx = editId ? editId.value : '';
+        const idx = parseInt(rawIdx, 10);
+
+        if (isNaN(idx) || idx < 0) return;
+
+        if (confirm("Apakah Anda yakin ingin menghapus data pengurus ini?")) {
+          if (tipe === 'penasehat' && currentData.penasehat) {
+            currentData.penasehat.splice(idx, 1);
+          } else if (tipe === 'pengurusInti' && currentData.pengurusInti) {
+            currentData.pengurusInti.splice(idx, 1);
+          } else if (tipe === 'seksiKerja' && currentData.seksiKerja) {
+            currentData.seksiKerja.splice(idx, 1);
+          }
+          saveData(currentData);
+          showToast("Pengurus berhasil dihapus.", "danger");
+          closePengurusModal();
+          initProfilAndPengurus();
+        }
+      };
+    }
+
     // 1. Dewan Penasehat
     const penasehatGrid = document.getElementById('penasehat-grid');
     if (penasehatGrid && penasehat) {
-      penasehatGrid.innerHTML = penasehat.map(p => `
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center gap-3">
-          <div class="w-8 h-8 rounded bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">
-            <i data-lucide="shield" class="w-4 h-4 text-slate-700"></i>
+      penasehatGrid.innerHTML = penasehat.map((p, idx) => `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">
+              <i data-lucide="shield" class="w-4 h-4 text-slate-700"></i>
+            </div>
+            <div>
+              <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">${p.jabatan}</div>
+              <div class="text-xs sm:text-sm font-bold text-slate-900">${p.nama}</div>
+            </div>
           </div>
-          <div>
-            <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">${p.jabatan}</div>
-            <div class="text-xs sm:text-sm font-bold text-slate-900">${p.nama}</div>
-          </div>
+          ${isAuth ? `
+            <button type="button" class="btn-edit-penasehat p-1.5 rounded hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer shrink-0" data-idx="${idx}" title="Ubah Nama/Jabatan">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+            </button>
+          ` : ''}
         </div>
       `).join('');
+
+      if (isAuth) {
+        penasehatGrid.querySelectorAll('.btn-edit-penasehat').forEach(btn => {
+          btn.onclick = () => {
+            const idx = parseInt(btn.dataset.idx, 10);
+            openPengurusModal('edit', 'penasehat', currentData.penasehat[idx], idx);
+          };
+        });
+      }
     }
 
     // 2. Pengurus Inti
     const pengurusGrid = document.getElementById('pengurus-grid');
     if (pengurusGrid && pengurusInti) {
-      pengurusGrid.innerHTML = pengurusInti.map(p => {
+      pengurusGrid.innerHTML = pengurusInti.map((p, idx) => {
         const waText = encodeURIComponent(`Halo ${p.nama} (${p.jabatan}), perkenalkan saya warga RT 04.`);
         return `
           <div class="civic-card p-5 flex flex-col justify-between">
@@ -281,9 +531,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-900 text-white">
                   ${p.jabatan}
                 </span>
-                <span class="text-[10px] font-mono text-slate-400">Pengurus Inti</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] font-mono text-slate-400">Pengurus Inti</span>
+                  ${isAuth ? `
+                    <button type="button" class="btn-edit-inti inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold border border-slate-300 transition-colors cursor-pointer" data-idx="${idx}" title="Ubah Nama/Nomor HP">
+                      <i data-lucide="edit-3" class="w-3 h-3"></i> Edit
+                    </button>
+                  ` : ''}
+                </div>
               </div>
-              <h4 class="font-bold text-slate-900 text-base mb-2">${p.nama}</h4>
+              <h4 class="font-bold text-slate-900 text-base mb-1">${p.nama}</h4>
+              <div class="text-[11px] font-mono text-slate-500 mb-2 flex items-center gap-1">
+                <i data-lucide="phone" class="w-3 h-3 text-slate-400"></i> +${p.whatsapp}
+              </div>
               <p class="text-xs text-slate-600 mb-4 leading-relaxed bg-slate-50 p-2.5 rounded border border-slate-100">
                 ${p.tugas}
               </p>
@@ -295,12 +555,21 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         `;
       }).join('');
+
+      if (isAuth) {
+        pengurusGrid.querySelectorAll('.btn-edit-inti').forEach(btn => {
+          btn.onclick = () => {
+            const idx = parseInt(btn.dataset.idx, 10);
+            openPengurusModal('edit', 'pengurusInti', currentData.pengurusInti[idx], idx);
+          };
+        });
+      }
     }
 
     // 3. Seksi-Seksi Kerja & Humas Blok
     const seksiGrid = document.getElementById('seksi-grid');
     if (seksiGrid && seksiKerja) {
-      seksiGrid.innerHTML = seksiKerja.map(s => {
+      seksiGrid.innerHTML = seksiKerja.map((s, idx) => {
         const hasBlok = s.perwakilanBlok && s.perwakilanBlok.length > 0;
         const waText = encodeURIComponent(`Halo ${s.koordinator} (${s.namaSeksi}), perkenalkan saya warga RT 04.`);
         return `
@@ -310,7 +579,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
                   ${s.namaSeksi}
                 </span>
-                <span class="text-xs font-bold text-slate-900">${s.koordinator}</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-bold text-slate-900">${s.koordinator}</span>
+                  ${isAuth ? `
+                    <button type="button" class="btn-edit-seksi inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold border border-slate-300 transition-colors cursor-pointer" data-idx="${idx}" title="Ubah Koordinator/Nomor/Bidang">
+                      <i data-lucide="edit-3" class="w-3 h-3"></i> Edit
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+
+              <div class="text-[11px] font-mono text-slate-500 mb-2 flex items-center gap-1">
+                <i data-lucide="phone" class="w-3 h-3 text-slate-400"></i> +${s.whatsapp}
               </div>
               
               <p class="text-xs text-slate-500 mb-3">${s.keterangan}</p>
@@ -349,7 +629,18 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         `;
       }).join('');
+
+      if (isAuth) {
+        seksiGrid.querySelectorAll('.btn-edit-seksi').forEach(btn => {
+          btn.onclick = () => {
+            const idx = parseInt(btn.dataset.idx, 10);
+            openPengurusModal('edit', 'seksiKerja', currentData.seksiKerja[idx], idx);
+          };
+        });
+      }
     }
+
+    refreshIcons();
   };
 
   // ----------------------------------------------------------------------------

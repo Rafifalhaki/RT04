@@ -240,7 +240,12 @@
           <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Struktur Organisasi</span>
           <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Pengurus Rukun Tetangga 04</h2>
         </div>
-        <div class="text-xs text-slate-500">Masa Bakti Periode 2024 – 2029</div>
+        <div class="flex items-center gap-2.5">
+          <button id="btn-tambah-pengurus" type="button" class="admin-only hidden inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-md shadow-xs transition-colors cursor-pointer">
+            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> + Tambah Pengurus
+          </button>
+          <div class="text-xs text-slate-500">Masa Bakti Periode 2024 – 2029</div>
+        </div>
       </div>
 
       <!-- Visi & Misi Ringkas -->
@@ -985,6 +990,83 @@
   </div>
 
   <!-- ========================================================================= -->
+  <!-- MODAL: FORM CRUD PENGURUS RT (Ubah Nama, No. WhatsApp, Jabatan) -->
+  <!-- ========================================================================= -->
+  <div id="modal-pengurus-form" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs modal-backdrop" role="dialog" aria-modal="true">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 modal-content shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+        <div>
+          <h3 id="modal-pengurus-title" class="text-sm font-bold text-slate-900 uppercase tracking-wider">Kelola Data Pengurus RT</h3>
+          <p class="text-xs text-slate-500">Ubah nama, nomor WhatsApp, jabatan, dan tanggung jawab</p>
+        </div>
+        <button id="modal-pengurus-close" type="button" class="w-7 h-7 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form id="form-crud-pengurus" class="space-y-3.5 text-xs">
+        <input type="hidden" id="pengurus-edit-type" value="">
+        <input type="hidden" id="pengurus-edit-id" value="">
+
+        <div>
+          <label for="pengurus-input-tipe" class="block font-semibold text-slate-700 mb-1">Kategori Kepengurusan <span class="text-rose-600">*</span></label>
+          <select id="pengurus-input-tipe" class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800 bg-white font-semibold">
+            <option value="pengurusInti">Pengurus Inti (Ketua / Sekretaris / Bendahara)</option>
+            <option value="penasehat">Dewan Penasehat RT</option>
+            <option value="seksiKerja">Seksi Bidang Kerja (Kepemudaan, Lingkungan, Sosial, Humas)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="pengurus-input-nama" class="block font-semibold text-slate-700 mb-1">Nama Lengkap & Gelar <span class="text-rose-600">*</span></label>
+            <input type="text" id="pengurus-input-nama" required placeholder="Contoh: Agus Cholif" class="w-full px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-slate-800 font-bold text-slate-900">
+          </div>
+          <div>
+            <label for="pengurus-input-jabatan" class="block font-semibold text-slate-700 mb-1">Jabatan / Seksi <span class="text-rose-600">*</span></label>
+            <input type="text" id="pengurus-input-jabatan" required placeholder="Contoh: Ketua RT" class="w-full px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-slate-800">
+          </div>
+        </div>
+
+        <div id="wrapper-pengurus-wa">
+          <label for="pengurus-input-wa" class="block font-semibold text-slate-700 mb-1">Nomor WhatsApp (Diawali 62)</label>
+          <input type="tel" id="pengurus-input-wa" placeholder="Contoh: 628123456789" class="w-full px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-slate-800 font-mono">
+          <p class="text-[11px] text-slate-500 mt-0.5">Gunakan format internasional tanpa tanda plus atau spasi (contoh: 6281299998888).</p>
+        </div>
+
+        <div id="wrapper-pengurus-tugas">
+          <label for="pengurus-input-tugas" class="block font-semibold text-slate-700 mb-1">Tugas Pokok / Keterangan</label>
+          <textarea id="pengurus-input-tugas" rows="3" placeholder="Uraian tanggung jawab dan tugas kepengurusan..." class="w-full px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-slate-800"></textarea>
+        </div>
+
+        <div id="wrapper-pengurus-subbidang" class="hidden">
+          <label for="pengurus-input-subbidang" class="block font-semibold text-slate-700 mb-1">Ruang Lingkup Sub-Bidang (1 baris per sub-bidang)</label>
+          <textarea id="pengurus-input-subbidang" rows="3" placeholder="keamanan&#10;sarana & prasarana&#10;perawatan aset" class="w-full px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-slate-800 font-mono text-[11px]"></textarea>
+        </div>
+
+        <div id="wrapper-pengurus-blok" class="hidden">
+          <label for="pengurus-input-blok" class="block font-semibold text-slate-700 mb-1">Perwakilan Koordinator Blok (Format: Nama Blok: Nama Orang, 1 baris per blok)</label>
+          <textarea id="pengurus-input-blok" rows="4" placeholder="Blok P: Hj Diah&#10;Blok Q: Reni&#10;Blok R: Eva&#10;Blok S: Ami&#10;Blok Al-Hikmah 1: Evi" class="w-full px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-slate-800 font-mono text-[11px]"></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex items-center justify-between">
+          <button id="btn-hapus-pengurus" type="button" class="hidden px-3 py-2 rounded bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold text-xs cursor-pointer">
+            Hapus Pengurus Ini
+          </button>
+          <div class="flex items-center gap-2 ml-auto">
+            <button id="btn-cancel-pengurus" type="button" class="px-3 py-2 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold cursor-pointer">
+              Batal
+            </button>
+            <button type="submit" class="px-4 py-2 rounded bg-slate-900 hover:bg-slate-800 text-white font-bold cursor-pointer">
+              Simpan Perubahan
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
   <!-- MODAL: SINKRONISASI DATA.JS UNTUK GITHUB PAGES -->
   <!-- ========================================================================= -->
   <div id="modal-sync-data" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs modal-backdrop" role="dialog" aria-modal="true">
@@ -1035,6 +1117,9 @@
         <span class="text-slate-400 hidden sm:inline">• CRUD Kas, Pengumuman & Siskamling</span>
       </div>
       <div class="flex flex-wrap items-center gap-2">
+        <button id="toolbar-btn-kelola-pengurus" class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer">
+          + Pengurus
+        </button>
         <button id="toolbar-btn-tambah-kas" class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer">
           + Kas
         </button>
