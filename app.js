@@ -1,16 +1,17 @@
 /**
  * ==============================================================================
- * APLIKASI UTAMA PORTAL DIGITAL RT (app.js)
+ * APLIKASI UTAMA PORTAL DIGITAL RT 04 (app.js)
  * ==============================================================================
+ * Desain: Civic Editorial & Fungsional (Tanpa AI-slop / gradien berlebihan)
  * Fitur:
- * 1. User Biasa (Warga): Bebas akses tanpa usn/pw (Guest mode).
- * 2. Admin Pengurus: Login dengan username & password (default: admin / adminrt04).
+ * 1. User Biasa (Warga): Akses langsung tanpa login (Read-Only).
+ * 2. Admin Pengurus: Login dengan username & password (admin / adminrt04).
  * 3. Sistem CRUD Lengkap:
  *    - Transaksi Kas RT (Create, Read, Update, Delete)
  *    - Papan Pengumuman & Agenda (Create, Read, Update, Delete)
  *    - Jadwal Siskamling / Ronda (Update anggota & koordinator)
- * 4. LocalStorage Persistence: Perubahan admin langsung aktif & tersimpan di browser.
- * 5. Sinkronisasi data.js: Ekspor/download 1-klik untuk di-push ke GitHub Pages.
+ * 4. LocalStorage Persistence: Perubahan admin langsung aktif di browser.
+ * 5. Sinkronisasi data.js: Ekspor/unduh 1-klik untuk di-push ke GitHub Pages.
  * ==============================================================================
  */
 
@@ -31,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Deep merge with base data to ensure all structure exists
         return Object.assign({}, window.RT_DATA, parsed);
       }
     } catch (e) {
@@ -50,21 +50,20 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
       console.error("Gagal menyimpan ke LocalStorage", e);
     }
-    // Re-render components that depend on dynamic data
     renderAll();
   };
 
   const resetData = () => {
-    if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data ke data awal bawaan data.js? Semua perubahan lokal akan dihapus.")) {
+    if (confirm("Kembalikan seluruh data ke konfigurasi awal data.js? Perubahan lokal akan dihapus.")) {
       localStorage.removeItem(STORAGE_KEY);
       currentData = JSON.parse(JSON.stringify(window.RT_DATA));
       renderAll();
-      showToast("Data berhasil di-reset ke konfigurasi awal data.js.", "info");
+      showToast("Data dikembalikan ke konfigurasi awal.", "info");
     }
   };
 
   // ----------------------------------------------------------------------------
-  // AUTHENTICATION STATE (USER BIASA VS ADMIN)
+  // AUTHENTICATION STATE (WARGA BIASA VS ADMIN)
   // ----------------------------------------------------------------------------
   const isAdminLoggedIn = () => {
     return sessionStorage.getItem(AUTH_KEY) === 'true';
@@ -89,29 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminOnlyEls = document.querySelectorAll('.admin-only');
 
     if (btnOpenLogin) {
-      if (isAuth) {
-        btnOpenLogin.classList.add('hidden');
-      } else {
-        btnOpenLogin.classList.remove('hidden');
-      }
+      btnOpenLogin.classList.toggle('hidden', isAuth);
     }
 
     if (topbarAdminPill) {
-      if (isAuth) {
-        topbarAdminPill.classList.remove('hidden');
-        topbarAdminPill.classList.add('inline-flex');
-      } else {
-        topbarAdminPill.classList.add('hidden');
-        topbarAdminPill.classList.remove('inline-flex');
-      }
+      topbarAdminPill.classList.toggle('hidden', !isAuth);
+      topbarAdminPill.classList.toggle('inline-flex', isAuth);
     }
 
     if (adminToolbar) {
-      if (isAuth) {
-        adminToolbar.classList.remove('hidden');
-      } else {
-        adminToolbar.classList.add('hidden');
-      }
+      adminToolbar.classList.toggle('hidden', !isAuth);
     }
 
     if (mobileLoginText) {
@@ -119,46 +105,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     adminOnlyEls.forEach(el => {
-      if (isAuth) {
-        el.classList.remove('hidden');
-      } else {
-        el.classList.add('hidden');
-      }
+      el.classList.toggle('hidden', !isAuth);
     });
 
     refreshIcons();
   };
 
   // ----------------------------------------------------------------------------
-  // TOAST NOTIFICATION SYSTEM
+  // TOAST NOTIFICATIONS
   // ----------------------------------------------------------------------------
   const showToast = (message, type = 'success') => {
     const container = document.getElementById('toast-container');
     if (!container) return;
 
     const toast = document.createElement('div');
-    const bgColor = type === 'success' ? 'bg-emerald-600' : type === 'danger' ? 'bg-rose-600' : 'bg-slate-800';
-    const iconName = type === 'success' ? 'check-circle' : type === 'danger' ? 'alert-triangle' : 'info';
+    const bgColor = type === 'success' ? 'bg-slate-900 border-emerald-600' : type === 'danger' ? 'bg-rose-950 border-rose-600' : 'bg-slate-900 border-slate-700';
 
-    toast.className = `flex items-center gap-2.5 px-4 py-3 rounded-2xl text-white text-xs font-semibold shadow-xl ${bgColor} transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto max-w-sm`;
+    toast.className = `flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-white text-xs font-semibold shadow-lg border ${bgColor} transition-all duration-200 transform translate-y-1 opacity-0 pointer-events-auto max-w-sm`;
     toast.innerHTML = `
-      <i data-lucide="${iconName}" class="w-4 h-4 shrink-0"></i>
+      <i data-lucide="${type === 'success' ? 'check' : type === 'danger' ? 'alert-circle' : 'info'}" class="w-4 h-4 shrink-0 text-white"></i>
       <span class="flex-1 leading-snug">${message}</span>
     `;
 
     container.appendChild(toast);
     refreshIcons();
 
-    // Trigger enter animation
     setTimeout(() => {
-      toast.classList.remove('translate-y-2', 'opacity-0');
+      toast.classList.remove('translate-y-1', 'opacity-0');
     }, 10);
 
-    // Auto remove after 3.5s
     setTimeout(() => {
-      toast.classList.add('opacity-0', 'translate-x-4');
-      setTimeout(() => toast.remove(), 300);
-    }, 3500);
+      toast.classList.add('opacity-0', 'translate-x-3');
+      setTimeout(() => toast.remove(), 250);
+    }, 3200);
   };
 
   // ----------------------------------------------------------------------------
@@ -185,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ----------------------------------------------------------------------------
-  // 1. INISIALISASI IDENTITAS & HERO
+  // 1. IDENTITAS & STATISTIK RESMI
   // ----------------------------------------------------------------------------
   const initIdentityAndHero = () => {
     const { info, statistik } = currentData;
@@ -194,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const topbarInfo = document.getElementById('topbar-info');
     if (topbarInfo) {
-      topbarInfo.textContent = `Portal Resmi ${info.namaRT} / ${info.namaRW} Kelurahan ${info.kelurahan}, ${info.kota}`;
+      topbarInfo.textContent = `Rukun Tetangga 04 • Rukun Warga 03 • Kelurahan ${info.kelurahan} • ${info.kota}`;
     }
 
     const topbarWaLink = document.getElementById('topbar-wa-link');
@@ -205,17 +184,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const navTitle = document.getElementById('nav-rt-title');
     const navSub = document.getElementById('nav-rt-sub');
     if (navTitle) navTitle.textContent = `${info.namaRT} / ${info.namaRW}`;
-    if (navSub) navSub.textContent = `Kel. ${info.kelurahan}, ${info.kecamatan}`;
+    if (navSub) navSub.textContent = `Kelurahan ${info.kelurahan}, Kecamatan ${info.kecamatan}, ${info.kota} ${info.kodePos || ''}`;
 
     const heroTitle = document.getElementById('hero-title');
     const heroDesc = document.getElementById('hero-desc');
     const heroPill = document.getElementById('hero-pill');
 
     if (heroTitle) {
-      heroTitle.innerHTML = `Portal Informasi Digital <br><span class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">${info.namaRT} / ${info.namaRW}</span> ${info.kelurahan}`;
+      heroTitle.textContent = `Pusat Informasi & Pelayanan Digital Warga ${info.namaRT} Sukamaju`;
     }
     if (heroDesc) heroDesc.textContent = info.deskripsi;
-    if (heroPill) heroPill.textContent = info.slogan;
+    if (heroPill) heroPill.textContent = `Portal Resmi Lingkungan ${info.namaRT} / ${info.namaRW}`;
 
     const statKK = document.getElementById('stat-kk');
     const statWarga = document.getElementById('stat-warga');
@@ -227,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (statWarga) statWarga.textContent = statistik.totalWarga;
     if (statWargaSub) statWargaSub.textContent = `${statistik.totalPria} Pria • ${statistik.totalWanita} Wanita`;
     if (statAgendaJudul) statAgendaJudul.textContent = statistik.agendaTerdekat;
-    if (statAgendaTgl) statAgendaTgl.textContent = `${statistik.agendaTanggal} • ${statistik.agendaWaktu}`;
+    if (statAgendaTgl) statAgendaTgl.textContent = `${statistik.agendaTanggal} (${statistik.agendaWaktu || 'Pagi'})`;
 
     const footerTitle = document.getElementById('footer-rt-title');
     const footerSub = document.getElementById('footer-rt-sub');
@@ -238,7 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const footerCopy = document.getElementById('footer-copy-name');
     const footerWaBtn = document.getElementById('footer-wa-btn');
     const footerMapsBtn = document.getElementById('footer-maps-btn');
-    const floatingWa = document.getElementById('floating-wa-btn');
 
     if (footerTitle) footerTitle.textContent = `${info.namaRT} / ${info.namaRW}`;
     if (footerSub) footerSub.textContent = `Kel. ${info.kelurahan}, Kec. ${info.kecamatan}, ${info.kota}`;
@@ -246,17 +224,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (footerAlamat) footerAlamat.textContent = info.alamatSekretariat;
     if (footerJam) footerJam.textContent = info.jamPelayanan;
     if (footerEmail) footerEmail.textContent = info.email;
-    if (footerCopy) footerCopy.textContent = `${info.namaRT} / ${info.namaRW} Kelurahan ${info.kelurahan}`;
+    if (footerCopy) footerCopy.textContent = `Rukun Tetangga 04 / RW 03 Kelurahan ${info.kelurahan}`;
     if (footerWaBtn && info.linkGrupWargaWA) footerWaBtn.href = info.linkGrupWargaWA;
     if (footerMapsBtn && info.linkGoogleMaps) footerMapsBtn.href = info.linkGoogleMaps;
-    if (floatingWa) floatingWa.href = `https://wa.me/${info.noWhatsAppLaporan}?text=${encodeURIComponent('Halo Pengurus RT, saya warga ingin menanyakan informasi lingkungan.')}`;
 
     const copyrightYear = document.getElementById('copyright-year');
     if (copyrightYear) copyrightYear.textContent = new Date().getFullYear();
   };
 
   // ----------------------------------------------------------------------------
-  // 2. PROFIL & PENGURUS RT
+  // 2. PROFIL & STRUKTUR PENGURUS
   // ----------------------------------------------------------------------------
   const initProfilAndPengurus = () => {
     const { visiMisi, pengurus } = currentData;
@@ -267,52 +244,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const misiListEl = document.getElementById('profil-misi-list');
     if (misiListEl) {
       misiListEl.innerHTML = visiMisi.misi.map((m, idx) => `
-        <li class="flex items-start gap-3">
-          <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+        <li class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded bg-slate-100 text-slate-800 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5 border border-slate-200">
             ${idx + 1}
           </span>
-          <p class="text-sm text-slate-700 leading-relaxed">${m}</p>
+          <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${m}</p>
         </li>
-      `).join('');
-    }
-
-    const nilaiGridEl = document.getElementById('profil-nilai-grid');
-    if (nilaiGridEl && visiMisi.nilai) {
-      nilaiGridEl.innerHTML = visiMisi.nilai.map(n => `
-        <div class="card-soft p-5 rounded-2xl flex flex-col items-center text-center">
-          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
-            <i data-lucide="${n.icon || 'star'}" class="w-6 h-6"></i>
-          </div>
-          <h4 class="font-bold text-slate-900 text-sm mb-1">${n.judul}</h4>
-          <p class="text-xs text-slate-500 leading-relaxed">${n.deskripsi}</p>
-        </div>
       `).join('');
     }
 
     const pengurusGrid = document.getElementById('pengurus-grid');
     if (pengurusGrid) {
       pengurusGrid.innerHTML = pengurus.map(p => {
-        const waText = encodeURIComponent(`Halo ${p.nama} (${p.jabatan}), perkenalkan saya warga RT ingin berkonsultasi.`);
+        const waText = encodeURIComponent(`Halo ${p.nama} (${p.jabatan}), perkenalkan saya warga RT 04.`);
         return `
-          <div class="card-soft p-5 rounded-2xl flex flex-col justify-between group">
+          <div class="civic-card p-5 flex flex-col justify-between">
             <div>
-              <div class="flex items-center gap-4 mb-4">
-                <img src="${p.foto}" alt="${p.nama}" class="w-16 h-16 rounded-2xl object-cover border-2 border-slate-100 shadow-sm shrink-0" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.nama)}&background=059669&color=fff'">
-                <div>
-                  <span class="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 mb-1 border border-emerald-100">
-                    ${p.jabatan}
-                  </span>
-                  <h4 class="font-bold text-slate-900 text-sm sm:text-base leading-snug">${p.nama}</h4>
-                  <span class="text-[11px] text-slate-400">Masa Bakti: ${p.periode}</span>
-                </div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
+                  ${p.jabatan}
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">${p.periode}</span>
               </div>
-              <p class="text-xs text-slate-600 mb-4 bg-slate-50/80 p-3 rounded-xl border border-slate-100 leading-relaxed">
+              <h4 class="font-bold text-slate-900 text-sm mb-1">${p.nama}</h4>
+              <p class="text-xs text-slate-600 mb-4 leading-relaxed bg-slate-50 p-2.5 rounded border border-slate-100">
                 ${p.tugasUtama}
               </p>
             </div>
             
-            <a href="https://wa.me/${p.whatsapp}?text=${waText}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white rounded-xl text-xs font-semibold transition-all group-hover:shadow-sm">
-              <i data-lucide="message-circle" class="w-4 h-4"></i> Hubungi via WhatsApp
+            <a href="https://wa.me/${p.whatsapp}?text=${waText}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-white hover:bg-slate-900 text-slate-700 hover:text-white rounded-md text-xs font-semibold border border-slate-300 transition-colors">
+              <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Hubungi via WhatsApp
             </a>
           </div>
         `;
@@ -321,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ----------------------------------------------------------------------------
-  // 3. TRANSPARANSI KAS RT & CHART.JS (DENGAN CRUD ADMIN)
+  // 3. TRANSPARANSI BUKU KAS UMUM & CHART.JS
   // ----------------------------------------------------------------------------
   const initTransparansiKas = () => {
     const { keuangan } = currentData;
@@ -338,7 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCancelKas = document.getElementById('btn-cancel-kas');
     const formTrxKas = document.getElementById('form-trx-kas');
 
-    // Populate filter dropdown
     if (filterSelect) {
       const prevVal = filterSelect.value;
       const months = Array.from(new Set(keuangan.transaksi.map(t => t.bulan))).sort().reverse();
@@ -410,40 +370,36 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tableBody) {
           tableBody.innerHTML = filtered.map(t => {
             const isMasuk = t.jenis === 'masuk';
-            const badgeClass = isMasuk
-              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-              : 'bg-rose-50 text-rose-700 border border-rose-200';
-            const nominalFormatted = `${isMasuk ? '+' : '-'} ${formatRupiah(t.nominal)}`;
-            const nominalColor = isMasuk ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold';
+            const nominalColor = isMasuk ? 'text-emerald-800' : 'text-slate-800';
+            const nominalPrefix = isMasuk ? '+' : '-';
 
             return `
-              <tr class="hover:bg-slate-50/70 transition-colors">
-                <td class="py-3 px-4 sm:px-3 text-slate-500 whitespace-nowrap">${t.tanggal}</td>
-                <td class="py-3 px-3">
-                  <div class="font-medium text-slate-800">${t.keterangan}</div>
-                  <span class="text-[10px] text-slate-400 sm:hidden block mt-0.5">${t.kategori}</span>
+              <tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="py-2.5 px-3 text-slate-500 whitespace-nowrap font-mono text-[11px]">${t.tanggal}</td>
+                <td class="py-2.5 px-3">
+                  <div class="font-semibold text-slate-900">${t.keterangan}</div>
+                  <span class="text-[10px] text-slate-500 sm:hidden block">${t.kategori}</span>
                 </td>
-                <td class="py-3 px-3 hidden sm:table-cell">
-                  <span class="inline-block px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600">
+                <td class="py-2.5 px-3 hidden sm:table-cell text-slate-600">
+                  <span class="inline-block px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-700 font-medium">
                     ${t.kategori}
                   </span>
                 </td>
-                <td class="py-3 px-3 text-right whitespace-nowrap ${nominalColor}">
-                  ${nominalFormatted}
+                <td class="py-2.5 px-3 text-right whitespace-nowrap font-mono font-bold ${nominalColor}">
+                  ${nominalPrefix} ${formatRupiah(t.nominal)}
                 </td>
-                <td class="py-3 px-4 sm:px-3 text-center whitespace-nowrap">
-                  <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded ${badgeClass}">
-                    <i data-lucide="${isMasuk ? 'arrow-down-left' : 'arrow-up-right'}" class="w-3 h-3"></i>
-                    ${t.bukti || (isMasuk ? 'Iuran' : 'Nota')}
+                <td class="py-2.5 px-3 text-center whitespace-nowrap">
+                  <span class="text-[10px] text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">
+                    ${t.bukti || (isMasuk ? 'Kwitansi' : 'Nota')}
                   </span>
                 </td>
                 ${isAuth ? `
-                  <td class="py-3 px-3 text-center whitespace-nowrap">
-                    <div class="flex items-center justify-center gap-1.5">
-                      <button type="button" data-edit-kas="${t.id}" class="p-1.5 rounded-lg bg-slate-100 hover:bg-emerald-100 text-slate-600 hover:text-emerald-700 transition-colors" title="Edit Transaksi">
+                  <td class="py-2.5 px-2 text-center whitespace-nowrap">
+                    <div class="flex items-center justify-center gap-1">
+                      <button type="button" data-edit-kas="${t.id}" class="p-1 rounded hover:bg-slate-200 text-slate-700" title="Edit">
                         <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                       </button>
-                      <button type="button" data-delete-kas="${t.id}" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-700 transition-colors" title="Hapus Transaksi">
+                      <button type="button" data-delete-kas="${t.id}" class="p-1 rounded hover:bg-rose-100 text-rose-700" title="Hapus">
                         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                       </button>
                     </div>
@@ -456,29 +412,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (countInfo) countInfo.textContent = `Menampilkan ${filtered.length} transaksi`;
       }
 
-      // Add Edit & Delete listeners for Kas
       if (isAuth && tableBody) {
         tableBody.querySelectorAll('[data-edit-kas]').forEach(btn => {
-          btn.addEventListener('click', (e) => {
+          btn.onclick = (e) => {
             e.stopPropagation();
-            const id = btn.getAttribute('data-edit-kas');
-            openKasModal(id);
-          });
+            openKasModal(btn.getAttribute('data-edit-kas'));
+          };
         });
 
         tableBody.querySelectorAll('[data-delete-kas]').forEach(btn => {
-          btn.addEventListener('click', (e) => {
+          btn.onclick = (e) => {
             e.stopPropagation();
-            const id = btn.getAttribute('data-delete-kas');
-            deleteKasTrx(id);
-          });
+            deleteKasTrx(btn.getAttribute('data-delete-kas'));
+          };
         });
       }
 
       refreshIcons();
     };
 
-    // Open Modal for Create / Edit Kas
     const openKasModal = (trxId = null) => {
       if (!modalKasForm) return;
       const modalTitle = document.getElementById('modal-kas-title');
@@ -493,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (trxId) {
         const trx = currentData.keuangan.transaksi.find(t => t.id === trxId);
         if (!trx) return;
-        modalTitle.textContent = 'Edit Transaksi Kas RT';
+        modalTitle.textContent = 'Edit Transaksi Kas';
         editIdInput.value = trx.id;
         tglInput.value = trx.tanggal;
         katInput.value = trx.kategori;
@@ -504,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
           r.checked = (r.value === trx.jenis);
         });
       } else {
-        modalTitle.textContent = 'Tambah Transaksi Kas RT';
+        modalTitle.textContent = 'Catat Transaksi Kas';
         editIdInput.value = '';
         tglInput.value = new Date().toISOString().split('T')[0];
         katInput.value = 'Iuran Warga';
@@ -525,18 +477,16 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.overflow = '';
     };
 
-    // Delete Kas Transaction
     const deleteKasTrx = (trxId) => {
       const trx = currentData.keuangan.transaksi.find(t => t.id === trxId);
       if (!trx) return;
-      if (confirm(`Apakah Anda yakin ingin menghapus transaksi "${trx.keterangan}" (${formatRupiah(trx.nominal)})?`)) {
+      if (confirm(`Hapus transaksi "${trx.keterangan}" (${formatRupiah(trx.nominal)})?`)) {
         currentData.keuangan.transaksi = currentData.keuangan.transaksi.filter(t => t.id !== trxId);
         saveData(currentData);
-        showToast("Transaksi kas berhasil dihapus.", "danger");
+        showToast("Transaksi kas dihapus.", "danger");
       }
     };
 
-    // Save/Update Kas Transaction Form Submit
     if (formTrxKas) {
       formTrxKas.onsubmit = (e) => {
         e.preventDefault();
@@ -547,15 +497,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const keterangan = document.getElementById('kas-input-ket').value.trim();
         const bukti = document.getElementById('kas-input-bukti').value.trim();
         const jenis = document.querySelector('input[name="kas-jenis"]:checked').value;
-        const bulan = tanggal.substring(0, 7); // YYYY-MM
+        const bulan = tanggal.substring(0, 7);
 
         if (!tanggal || isNaN(nominal) || nominal <= 0 || !keterangan) {
-          alert("Mohon isi seluruh data transaksi dengan benar.");
+          alert("Mohon isi seluruh data transaksi dengan lengkap.");
           return;
         }
 
         if (editId) {
-          // Update
           const index = currentData.keuangan.transaksi.findIndex(t => t.id === editId);
           if (index !== -1) {
             currentData.keuangan.transaksi[index] = {
@@ -568,12 +517,11 @@ document.addEventListener('DOMContentLoaded', () => {
               nominal,
               bukti
             };
-            showToast("Transaksi kas berhasil diperbarui.");
+            showToast("Transaksi berhasil diperbarui.");
           }
         } else {
-          // Create
           const newId = `TRX-${Date.now().toString().slice(-4)}`;
-          const newTrx = {
+          currentData.keuangan.transaksi.unshift({
             id: newId,
             tanggal,
             bulan,
@@ -582,9 +530,8 @@ document.addEventListener('DOMContentLoaded', () => {
             jenis,
             nominal,
             bukti
-          };
-          currentData.keuangan.transaksi.unshift(newTrx);
-          showToast("Transaksi kas baru berhasil ditambahkan.");
+          });
+          showToast("Transaksi baru berhasil dicatat.");
         }
 
         closeKasModal();
@@ -600,7 +547,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterSelect) filterSelect.onchange = renderKas;
     if (searchInput) searchInput.oninput = renderKas;
 
-    // Export CSV
     if (btnExport) {
       btnExport.onclick = () => {
         const rows = [
@@ -623,14 +569,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement('a');
         link.setAttribute('href', encodedUri);
-        link.setAttribute('download', `laporan-kas-rt-${currentData.info.namaRT.replace(/\s+/g, '')}.csv`);
+        link.setAttribute('download', `buku-kas-rt04-${currentData.info.namaRT.replace(/\s+/g, '')}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
       };
     }
 
-    // Chart.js render
+    // Chart.js - Subdued & Grounded Theme
     const initChart = () => {
       const ctx = document.getElementById('kasChart');
       if (!ctx || !window.Chart) return;
@@ -651,19 +597,19 @@ document.addEventListener('DOMContentLoaded', () => {
           labels: chartData.labels,
           datasets: [
             {
-              label: 'Pemasukan',
+              label: 'Penerimaan',
               data: chartData.pemasukan,
-              backgroundColor: '#10b981',
-              borderRadius: 6,
-              barPercentage: 0.7,
+              backgroundColor: '#0f172a', /* Charcoal / Dark Slate */
+              borderRadius: 3,
+              barPercentage: 0.65,
               categoryPercentage: 0.6
             },
             {
               label: 'Pengeluaran',
               data: chartData.pengeluaran,
-              backgroundColor: '#f43f5e',
-              borderRadius: 6,
-              barPercentage: 0.7,
+              backgroundColor: '#94a3b8', /* Muted Slate */
+              borderRadius: 3,
+              barPercentage: 0.65,
               categoryPercentage: 0.6
             }
           ]
@@ -692,7 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 callback: function(val) {
                   return 'Rp ' + (val / 1000000).toFixed(1) + ' jt';
                 },
-                font: { family: "'Plus Jakarta Sans', sans-serif", size: 10 }
+                font: { family: "'JetBrains Mono', monospace", size: 10 }
               }
             }
           }
@@ -705,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ----------------------------------------------------------------------------
-  // 4. PAPAN PENGUMUMAN & CRUD PENGUMUMAN
+  // 4. PAPAN PENGUMUMAN (EDITORIAL STYLE)
   // ----------------------------------------------------------------------------
   const initPengumuman = () => {
     const { pengumuman, info } = currentData;
@@ -721,10 +667,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Detail Modal Elements
     const modalDetail = document.getElementById('pengumuman-modal');
-    const modalImg = document.getElementById('modal-img');
     const modalCategory = document.getElementById('modal-category');
     const modalDate = document.getElementById('modal-date');
-    const modalTime = document.getElementById('modal-time');
     const modalTitle = document.getElementById('modal-title');
     const modalLocation = document.getElementById('modal-location');
     const modalBody = document.getElementById('modal-body-text');
@@ -734,21 +678,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const openDetailModal = (item) => {
       if (!modalDetail) return;
-      modalImg.src = item.gambar || 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800&auto=format&fit=crop&q=80';
       modalCategory.textContent = item.kategori;
       modalDate.textContent = item.tanggal;
-      modalTime.textContent = item.waktu || 'Fleksibel';
       modalTitle.textContent = item.judul;
-      modalLocation.textContent = item.lokasi || 'Lingkungan RT';
+      modalLocation.textContent = item.lokasi || 'Lingkungan RT 04';
       
       const formattedBody = (item.isiLengkap || item.ringkasan)
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n\n/g, '</p><p class="mt-3">')
+        .replace(/\n\n/g, '</p><p class="mt-2.5">')
         .replace(/\n/g, '<br>');
       
       modalBody.innerHTML = `<p>${formattedBody}</p>`;
 
-      const shareText = encodeURIComponent(`📢 *PENGUMUMAN ${info.namaRT} / ${info.namaRW}*\n\n*${item.judul}*\n📅 Tanggal: ${item.tanggal}\n📍 Lokasi: ${item.lokasi || 'Lingkungan RT'}\n\n${item.ringkasan}\n\nInformasi selengkapnya di website portal RT.`);
+      const shareText = encodeURIComponent(`Warta Warga ${info.namaRT} / ${info.namaRW}\n\n*${item.judul}*\nTanggal: ${item.tanggal}\nLokasi: ${item.lokasi || 'Lingkungan RT'}\n\n${item.ringkasan}\n\nInformasi lengkap: https://rafifalhaki.github.io/RT04/`);
       modalShareWa.href = `https://wa.me/?text=${shareText}`;
 
       modalDetail.classList.add('active');
@@ -770,7 +712,6 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    // CRUD Form Modal
     const openFormModal = (pengId = null) => {
       if (!modalForm) return;
       const title = document.getElementById('modal-pengumuman-title');
@@ -783,7 +724,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const lokasiInput = document.getElementById('peng-input-lokasi');
       const ringkasanInput = document.getElementById('peng-input-ringkasan');
       const lengkapInput = document.getElementById('peng-input-lengkap');
-      const gambarInput = document.getElementById('peng-input-gambar');
 
       if (pengId) {
         const item = currentData.pengumuman.find(p => p.id === pengId);
@@ -798,7 +738,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lokasiInput.value = item.lokasi || '';
         ringkasanInput.value = item.ringkasan || '';
         lengkapInput.value = item.isiLengkap || '';
-        gambarInput.value = item.gambar || '';
       } else {
         title.textContent = 'Buat Pengumuman Baru';
         editIdInput.value = '';
@@ -807,10 +746,9 @@ document.addEventListener('DOMContentLoaded', () => {
         prioritasInput.value = 'Rutin';
         tglInput.value = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         waktuInput.value = '08.00 WIB - Selesai';
-        lokasiInput.value = 'Balai Warga';
+        lokasiInput.value = 'Balai Warga RT 04';
         ringkasanInput.value = '';
         lengkapInput.value = '';
-        gambarInput.value = 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&auto=format&fit=crop&q=80';
       }
 
       modalForm.classList.add('active');
@@ -829,18 +767,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalFormClose) modalFormClose.onclick = closeFormModal;
     if (btnCancelPengumuman) btnCancelPengumuman.onclick = closeFormModal;
 
-    // Delete Pengumuman
     const deletePengumuman = (pengId) => {
       const item = currentData.pengumuman.find(p => p.id === pengId);
       if (!item) return;
-      if (confirm(`Apakah Anda yakin ingin menghapus pengumuman "${item.judul}"?`)) {
+      if (confirm(`Hapus pengumuman "${item.judul}"?`)) {
         currentData.pengumuman = currentData.pengumuman.filter(p => p.id !== pengId);
         saveData(currentData);
-        showToast("Pengumuman berhasil dihapus.", "danger");
+        showToast("Pengumuman dihapus.", "danger");
       }
     };
 
-    // Submit Pengumuman Form
     if (formCrudPengumuman) {
       formCrudPengumuman.onsubmit = (e) => {
         e.preventDefault();
@@ -853,7 +789,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const lokasi = document.getElementById('peng-input-lokasi').value.trim();
         const ringkasan = document.getElementById('peng-input-ringkasan').value.trim();
         const isiLengkap = document.getElementById('peng-input-lengkap').value.trim();
-        const gambar = document.getElementById('peng-input-gambar').value.trim() || 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800&auto=format&fit=crop&q=80';
 
         if (!judul || !tanggal || !ringkasan) {
           alert("Mohon lengkapi judul, tanggal, dan ringkasan pengumuman.");
@@ -872,8 +807,7 @@ document.addEventListener('DOMContentLoaded', () => {
               waktu,
               lokasi,
               ringkasan,
-              isiLengkap,
-              gambar
+              isiLengkap
             };
             showToast("Pengumuman berhasil diperbarui.");
           }
@@ -888,10 +822,9 @@ document.addEventListener('DOMContentLoaded', () => {
             waktu,
             lokasi,
             ringkasan,
-            isiLengkap,
-            gambar
+            isiLengkap
           });
-          showToast("Pengumuman baru berhasil dipublikasikan.");
+          showToast("Pengumuman baru berhasil diterbitkan.");
         }
 
         closeFormModal();
@@ -899,7 +832,6 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    // Render Cards
     const renderPengumuman = (category = 'all') => {
       const filtered = category === 'all'
         ? currentData.pengumuman
@@ -908,45 +840,35 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!grid) return;
 
       grid.innerHTML = filtered.map(item => `
-        <div class="card-soft rounded-2xl overflow-hidden flex flex-col justify-between group cursor-pointer" data-id="${item.id}">
+        <div class="civic-card p-5 flex flex-col justify-between group cursor-pointer" data-id="${item.id}">
           <div>
-            <div class="relative h-44 overflow-hidden bg-slate-100">
-              <img src="${item.gambar}" alt="${item.judul}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800&auto=format&fit=crop&q=80'">
-              <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-white/95 text-emerald-800 shadow-xs">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
                 ${item.kategori}
               </span>
-              ${item.prioritas === 'Penting' ? `
-                <span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-600 text-white shadow-xs">
-                  PENTING
-                </span>
-              ` : ''}
+              <span class="text-[10px] font-mono text-slate-500">${item.tanggal}</span>
             </div>
             
-            <div class="p-5">
-              <div class="flex items-center gap-2 text-[11px] text-slate-400 mb-2 font-medium">
-                <i data-lucide="calendar" class="w-3.5 h-3.5 text-emerald-600"></i>
-                <span>${item.tanggal}</span>
-              </div>
-              <h3 class="font-bold text-slate-900 text-base mb-2 group-hover:text-emerald-700 transition-colors line-clamp-2">
-                ${item.judul}
-              </h3>
-              <p class="text-xs text-slate-500 line-clamp-3 leading-relaxed mb-4">
-                ${item.ringkasan}
-              </p>
-            </div>
+            <h3 class="font-bold text-slate-900 text-sm leading-snug mb-2 group-hover:text-slate-700 transition-colors">
+              ${item.judul}
+            </h3>
+            
+            <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-4">
+              ${item.ringkasan}
+            </p>
           </div>
 
-          <div class="px-5 pb-5 pt-0 space-y-2">
-            <button type="button" class="btn-detail-pengumuman w-full py-2 px-3 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors border border-slate-200 group-hover:border-emerald-200">
-              Baca Selengkapnya <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-            </button>
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="font-semibold text-slate-800 group-hover:underline inline-flex items-center gap-1">
+              Baca Warta <i data-lucide="arrow-right" class="w-3 h-3"></i>
+            </span>
             ${isAuth ? `
-              <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
-                <button type="button" data-edit-peng="${item.id}" class="flex-1 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 font-bold text-[11px] flex items-center justify-center gap-1 transition-colors">
-                  <i data-lucide="edit-2" class="w-3 h-3"></i> Edit
+              <div class="flex items-center gap-1">
+                <button type="button" data-edit-peng="${item.id}" class="p-1 rounded hover:bg-slate-200 text-slate-700" title="Edit">
+                  <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                 </button>
-                <button type="button" data-delete-peng="${item.id}" class="flex-1 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-[11px] flex items-center justify-center gap-1 transition-colors">
-                  <i data-lucide="trash-2" class="w-3 h-3"></i> Hapus
+                <button type="button" data-delete-peng="${item.id}" class="p-1 rounded hover:bg-rose-100 text-rose-700" title="Hapus">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
             ` : ''}
@@ -954,10 +876,8 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `).join('');
 
-      // Click card opens detail
       grid.querySelectorAll('[data-id]').forEach(card => {
         card.onclick = (e) => {
-          // If clicked on edit or delete, don't open detail
           if (e.target.closest('[data-edit-peng]') || e.target.closest('[data-delete-peng]')) return;
           const id = card.getAttribute('data-id');
           const found = currentData.pengumuman.find(p => p.id === id);
@@ -965,21 +885,18 @@ document.addEventListener('DOMContentLoaded', () => {
         };
       });
 
-      // Edit / Delete buttons
       if (isAuth) {
         grid.querySelectorAll('[data-edit-peng]').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
-            const id = btn.getAttribute('data-edit-peng');
-            openFormModal(id);
+            openFormModal(btn.getAttribute('data-edit-peng'));
           };
         });
 
         grid.querySelectorAll('[data-delete-peng]').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
-            const id = btn.getAttribute('data-delete-peng');
-            deletePengumuman(id);
+            deletePengumuman(btn.getAttribute('data-delete-peng'));
           };
         });
       }
@@ -990,10 +907,10 @@ document.addEventListener('DOMContentLoaded', () => {
     filterBtns.forEach(btn => {
       btn.onclick = () => {
         filterBtns.forEach(b => {
-          b.classList.remove('active', 'bg-emerald-600', 'text-white');
+          b.classList.remove('active', 'bg-slate-900', 'text-white');
           b.classList.add('bg-slate-100', 'text-slate-600');
         });
-        btn.classList.add('active', 'bg-emerald-600', 'text-white');
+        btn.classList.add('active', 'bg-slate-900', 'text-white');
         btn.classList.remove('bg-slate-100', 'text-slate-600');
 
         renderPengumuman(btn.getAttribute('data-cat'));
@@ -1004,7 +921,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ----------------------------------------------------------------------------
-  // 5. JADWAL RONDA & EDIT RONDA
+  // 5. JADWAL SISKAMLING & KONTAK DARURAT
   // ----------------------------------------------------------------------------
   const initRondaAndDarurat = () => {
     const { jadwalRonda, kontakDarurat } = currentData;
@@ -1024,9 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rondaInputAnggota = document.getElementById('ronda-input-anggota');
 
     const jamEl = document.getElementById('ronda-jam');
-    const posEl = document.getElementById('ronda-pos');
     if (jamEl) jamEl.textContent = jadwalRonda.jamOperasional;
-    if (posEl) posEl.textContent = jadwalRonda.posUtama;
 
     const currentDay = getIndonesianDayName();
     let selectedDay = jadwalRonda.harian.some(d => d.hari.toLowerCase() === currentDay.toLowerCase())
@@ -1040,34 +955,31 @@ document.addEventListener('DOMContentLoaded', () => {
       const isToday = schedule.hari.toLowerCase() === currentDay.toLowerCase();
 
       activeDetail.innerHTML = `
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-200">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-4 gap-2">
           <div>
             <div class="flex items-center gap-2">
-              <h4 class="text-lg font-bold text-slate-900">Jadwal Ronda Malam: ${schedule.hari}</h4>
+              <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Regu Jaga: Hari ${schedule.hari}</h4>
               ${isToday ? `
-                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-600 text-white shadow-xs">
-                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span> Hari Ini
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-white uppercase">
+                  Dinas Malam Ini
                 </span>
               ` : ''}
             </div>
-            <p class="text-xs text-slate-500 mt-0.5">Koordinator: <strong class="text-slate-800">${schedule.koordinator}</strong> (${schedule.kontakKoordinator})</p>
+            <p class="text-xs text-slate-600 mt-0.5">Koordinator: <strong class="text-slate-900">${schedule.koordinator}</strong> (${schedule.kontakKoordinator})</p>
           </div>
           
-          <a href="https://wa.me/${schedule.kontakKoordinator.replace(/^0/, '62')}?text=${encodeURIComponent(`Halo Koordinator Ronda ${schedule.hari}, saya ingin konfirmasi kehadiran siskamling.`)}" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 rounded-xl text-xs font-semibold border border-slate-200 shadow-xs transition-colors">
+          <a href="https://wa.me/${schedule.kontakKoordinator.replace(/^0/, '62')}?text=${encodeURIComponent(`Halo Koordinator Ronda ${schedule.hari}, saya ingin konfirmasi jadwal ronda malam.`)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded text-xs font-semibold transition-colors">
             <i data-lucide="phone" class="w-3.5 h-3.5"></i> Hubungi Koordinator
           </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
           ${schedule.anggota.map((nama, idx) => `
-            <div class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 shadow-2xs">
-              <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0">
+            <div class="flex items-center gap-2.5 p-2.5 bg-slate-50 rounded border border-slate-200 text-xs">
+              <span class="w-5 h-5 rounded bg-white text-slate-700 font-mono font-bold text-[10px] flex items-center justify-center shrink-0 border border-slate-200">
                 ${idx + 1}
-              </div>
-              <div class="overflow-hidden">
-                <span class="text-xs font-semibold text-slate-800 block truncate">${nama}</span>
-                <span class="text-[10px] text-slate-400">Petugas Siskamling</span>
-              </div>
+              </span>
+              <span class="font-medium text-slate-800 truncate">${nama}</span>
             </div>
           `).join('')}
         </div>
@@ -1083,13 +995,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const isToday = d.hari.toLowerCase() === currentDay.toLowerCase();
 
         return `
-          <button type="button" data-day="${d.hari}" class="tab-day-btn px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 flex items-center gap-1.5 ${
+          <button type="button" data-day="${d.hari}" class="tab-day-btn px-3 py-1.5 rounded text-xs font-bold border transition-colors shrink-0 flex items-center gap-1.5 ${
             isActive
               ? 'active'
               : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
           }">
             ${d.hari}
-            ${isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>' : ''}
+            ${isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>' : ''}
           </button>
         `;
       }).join('');
@@ -1106,7 +1018,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTabs();
     renderActiveDayDetail(selectedDay);
 
-    // Ronda Modal Handler
     const populateRondaForm = (dayName) => {
       const schedule = currentData.jadwalRonda.harian.find(d => d.hari.toLowerCase() === dayName.toLowerCase());
       if (!schedule) return;
@@ -1149,7 +1060,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const anggota = rondaInputAnggota.value.split('\n').map(a => a.trim()).filter(a => a.length > 0);
 
         if (!koordinator || anggota.length === 0) {
-          alert("Mohon isi nama koordinator dan minimal 1 nama anggota ronda.");
+          alert("Mohon isi nama koordinator dan minimal 1 nama anggota.");
           return;
         }
 
@@ -1162,14 +1073,13 @@ document.addEventListener('DOMContentLoaded', () => {
             anggota
           };
           saveData(currentData);
-          showToast(`Jadwal ronda hari ${hari} berhasil diperbarui.`);
+          showToast(`Jadwal hari ${hari} diperbarui.`);
         }
 
         closeRondaModal();
       };
     }
 
-    // Search resident in Ronda
     if (searchInput && searchResults) {
       searchInput.oninput = () => {
         const query = searchInput.value.toLowerCase().trim();
@@ -1191,24 +1101,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (matches.length > 0) {
           searchResults.classList.remove('hidden');
           searchResults.innerHTML = `
-            <div class="font-bold mb-1 flex items-center gap-1.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> Ditemukan di ${matches.length} jadwal ronda:
-            </div>
+            <div class="font-bold mb-1">Ditemukan di ${matches.length} jadwal jaga siskamling:</div>
             <ul class="space-y-1 list-disc list-inside">
               ${matches.map(m => `
-                <li><strong>${m.nama}</strong> bertugas pada hari <strong>${m.hari}</strong> (Koordinator: ${m.koordinator})</li>
+                <li><strong>${m.nama}</strong>: Hari <strong>${m.hari}</strong> (Koordinator: ${m.koordinator})</li>
               `).join('')}
             </ul>
           `;
-          refreshIcons();
         } else {
           searchResults.classList.remove('hidden');
           searchResults.innerHTML = `
-            <div class="text-rose-700 flex items-center gap-1.5">
-              <i data-lucide="alert-circle" class="w-4 h-4"></i> Nama "<strong>${query}</strong>" belum ditemukan di daftar siskamling aktif. Silakan hubungi Koordinator Keamanan.
-            </div>
+            <div class="text-rose-700">Nama "<strong>${query}</strong>" belum ditemukan di daftar jaga aktif. Hubungi Koordinator Kamtibmas.</div>
           `;
-          refreshIcons();
         }
       };
     }
@@ -1218,27 +1122,25 @@ document.addEventListener('DOMContentLoaded', () => {
       daruratGrid.innerHTML = kontakDarurat.map(k => {
         const hasWa = k.whatsapp && k.whatsapp.length > 0;
         return `
-          <div class="card-soft p-5 rounded-2xl flex flex-col justify-between">
+          <div class="civic-card p-4 flex flex-col justify-between">
             <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
                   ${k.kategori}
                 </span>
-                <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
-                  <i data-lucide="${k.icon || 'phone'}" class="w-4 h-4"></i>
-                </div>
+                <i data-lucide="phone-call" class="w-3.5 h-3.5 text-slate-400"></i>
               </div>
-              <h4 class="font-bold text-slate-900 text-sm mb-1">${k.nama}</h4>
-              <p class="text-xs text-slate-500 mb-4">${k.deskripsi}</p>
+              <h4 class="font-bold text-slate-900 text-xs sm:text-sm mb-1">${k.nama}</h4>
+              <p class="text-[11px] text-slate-500 mb-3">${k.deskripsi}</p>
             </div>
 
-            <div class="pt-3 border-t border-slate-100 space-y-2">
-              <a href="tel:${k.telepon}" class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors">
-                <i data-lucide="phone-call" class="w-3.5 h-3.5"></i> Telp: ${k.telepon}
+            <div class="pt-2.5 border-t border-slate-100 space-y-1.5">
+              <a href="tel:${k.telepon}" class="w-full inline-flex items-center justify-center gap-1.5 py-1.5 px-2 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-mono font-bold transition-colors">
+                Hubungi: ${k.telepon}
               </a>
               ${hasWa ? `
-                <a href="https://wa.me/${k.whatsapp}?text=${encodeURIComponent('Halo, kondisi darurat lingkungan RT mohon bantuan.')}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-xl text-xs font-medium transition-colors">
-                  <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i> Chat WhatsApp
+                <a href="https://wa.me/${k.whatsapp}?text=${encodeURIComponent('Halo, kondisi darurat lingkungan RT 04 mohon bantuan.')}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-1 py-1 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[11px] font-medium transition-colors">
+                  <i data-lucide="message-square" class="w-3 h-3 text-slate-500"></i> Chat WhatsApp
                 </a>
               ` : ''}
             </div>
@@ -1261,36 +1163,26 @@ document.addEventListener('DOMContentLoaded', () => {
       accordionContainer.innerHTML = layananSurat.map((surat, index) => {
         const isFirst = index === 0;
         return `
-          <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white">
-            <button type="button" class="accordion-toggle w-full px-5 py-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors">
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                  <i data-lucide="file-text" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-slate-900 text-xs sm:text-sm leading-snug">${surat.judul}</h4>
-                  <span class="text-[11px] text-slate-400">${surat.prosesWaktu} • Biaya: ${surat.biaya}</span>
-                </div>
+          <div class="civic-card overflow-hidden">
+            <button type="button" class="accordion-toggle w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-slate-50 transition-colors">
+              <div>
+                <h4 class="font-bold text-slate-900 text-xs sm:text-sm">${surat.judul}</h4>
+                <span class="text-[11px] text-slate-500">${surat.prosesWaktu} • Biaya: ${surat.biaya}</span>
               </div>
               <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-slate-400 shrink-0 ${isFirst ? 'rotated' : ''}"></i>
             </button>
             
             <div class="accordion-content ${isFirst ? 'expanded' : ''}">
-              <div class="p-5 pt-0 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-600 space-y-3">
-                <p class="italic text-slate-500">${surat.keperluan}</p>
-                <div class="font-semibold text-slate-700">Persyaratan yang wajib disiapkan:</div>
-                <ul class="space-y-1.5 list-none">
-                  ${surat.syarat.map(s => `
-                    <li class="flex items-start gap-2">
-                      <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5"></i>
-                      <span>${s}</span>
-                    </li>
-                  `).join('')}
+              <div class="p-4 pt-0 border-t border-slate-100 text-xs text-slate-600 space-y-2.5 bg-slate-50/50">
+                <p class="text-slate-500 italic">${surat.keperluan}</p>
+                <div class="font-semibold text-slate-800">Persyaratan berkas:</div>
+                <ul class="space-y-1 list-disc list-inside">
+                  ${surat.syarat.map(s => `<li>${s}</li>`).join('')}
                 </ul>
-                <div class="pt-2 flex items-center justify-between">
-                  <span class="text-[11px] text-emerald-700 font-medium">Bisa dikonfirmasi via WhatsApp</span>
-                  <a href="https://wa.me/${info.noWhatsAppLaporan}?text=${encodeURIComponent(`Halo Pengurus RT, saya ingin mengajukan ${surat.judul}. Persyaratan sudah saya siapkan.`)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-800 font-bold text-xs">
-                    Ajukan Sekarang <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                <div class="pt-2 flex items-center justify-between text-[11px]">
+                  <span class="text-slate-500">Pelayanan Balai RT 04</span>
+                  <a href="https://wa.me/${info.noWhatsAppLaporan}?text=${encodeURIComponent(`Halo Pengurus RT, saya ingin mengajukan ${surat.judul}. Persyaratan sudah saya siapkan.`)}" target="_blank" rel="noopener" class="font-bold text-slate-900 hover:underline">
+                    Hubungi Pengurus →
                   </a>
                 </div>
               </div>
@@ -1338,35 +1230,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const jamStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
         const waMessage = 
-`*PENGADUAN / ASPIRASI WARGA RT*
+`*PENGADUAN / ASPIRASI WARGA RT 04*
 ------------------------------------------------
-👤 *Nama Lengkap:* ${nama}
-🏠 *Alamat/Rumah:* ${alamat}
-📞 *Kontak Pelapor:* ${wa}
-🏷️ *Kategori:* ${kategori}
-📅 *Waktu Lapor:* ${tglStr}, ${jamStr} WIB
+Nama: ${nama}
+Alamat: ${alamat}
+Kontak: ${wa}
+Kategori: ${kategori}
+Waktu: ${tglStr}, ${jamStr} WIB
 
-📝 *Rincian Laporan:*
+Rincian Laporan:
 ${pesan}
-
 ------------------------------------------------
-_Laporan dikirim otomatis melalui Portal Digital Warga_`;
+Dikirim melalui Portal Warga RT 04 Sukamaju`;
 
         const encodedWa = encodeURIComponent(waMessage);
         const waUrl = `https://wa.me/${info.noWhatsAppLaporan}?text=${encodedWa}`;
 
         window.open(waUrl, '_blank');
         formPengaduan.reset();
-        showToast('Pesan berhasil diformat dan diarahkan ke WhatsApp Pengurus RT.');
+        showToast('Pesan telah diformat dan diarahkan ke WhatsApp Pengurus RT.');
       };
     }
   };
 
   // ----------------------------------------------------------------------------
-  // 7. MODAL LOGIN & SINKRONISASI DATA.JS
+  // 7. MODAL LOGIN & SINKRONISASI
   // ----------------------------------------------------------------------------
   const initAuthAndSyncModals = () => {
-    // Login Modal
     const modalLogin = document.getElementById('modal-login');
     const btnOpenLogin = document.getElementById('btn-open-login');
     const mobileBtnLogin = document.getElementById('mobile-btn-login');
@@ -1380,7 +1270,7 @@ _Laporan dikirim otomatis melalui Portal Digital Warga_`;
 
     const openLoginModal = () => {
       if (isAdminLoggedIn()) {
-        if (confirm("Anda sedang dalam Mode Pengurus. Apakah Anda ingin keluar (Logout)?")) {
+        if (confirm("Keluar dari Mode Pengurus RT?")) {
           setAdminAuth(false);
           showToast("Berhasil keluar dari mode pengurus.", "info");
         }
@@ -1408,7 +1298,7 @@ _Laporan dikirim otomatis melalui Portal Digital Warga_`;
 
     const handleLogout = () => {
       setAdminAuth(false);
-      showToast("Berhasil keluar dari mode pengurus. Sekarang dalam mode warga (read-only).", "info");
+      showToast("Kembali ke mode warga biasa (read-only).", "info");
     };
 
     if (btnTopbarLogout) btnTopbarLogout.onclick = handleLogout;
@@ -1426,14 +1316,13 @@ _Laporan dikirim otomatis melalui Portal Digital Warga_`;
         if (usn === validUsn && pw === validPw) {
           setAdminAuth(true);
           closeLoginModal();
-          showToast("Selamat datang! Anda masuk dalam Mode Pengurus RT (CRUD Aktif).");
+          showToast("Mode Pengurus RT Aktif (Fitur CRUD Siap Digunakan).");
         } else {
           if (loginErrorMsg) loginErrorMsg.classList.remove('hidden');
         }
       };
     }
 
-    // Sync / Export Modal
     const modalSync = document.getElementById('modal-sync-data');
     const modalSyncClose = document.getElementById('modal-sync-close');
     const toolbarBtnSyncData = document.getElementById('toolbar-btn-sync-data');
@@ -1444,9 +1333,9 @@ _Laporan dikirim otomatis melalui Portal Digital Warga_`;
     const generateDataJsString = () => {
       return `/**
  * ==============================================================================
- * DATA KONFIGURASI PORTAL DIGITAL RT (RUKUN TETANGGA)
+ * DATA KONFIGURASI PORTAL DIGITAL RT 04
  * ==============================================================================
- * Diperbarui otomatis dari Panel Admin RT pada: ${new Date().toLocaleString('id-ID')}
+ * Diperbarui dari Panel Pengurus RT: ${new Date().toLocaleString('id-ID')}
  * ==============================================================================
  */
 
@@ -1456,8 +1345,7 @@ window.RT_DATA = ${JSON.stringify(currentData, null, 2)};
 
     const openSyncModal = () => {
       if (!modalSync) return;
-      const codeStr = generateDataJsString();
-      if (syncCodePreview) syncCodePreview.value = codeStr;
+      if (syncCodePreview) syncCodePreview.value = generateDataJsString();
       modalSync.classList.add('active');
       document.body.style.overflow = 'hidden';
       refreshIcons();
@@ -1476,11 +1364,11 @@ window.RT_DATA = ${JSON.stringify(currentData, null, 2)};
       btnCopyDataJs.onclick = () => {
         const codeStr = generateDataJsString();
         navigator.clipboard.writeText(codeStr).then(() => {
-          showToast("Kode data.js berhasil disalin ke clipboard!");
+          showToast("Kode data.js disalin ke clipboard.");
         }).catch(() => {
           syncCodePreview.select();
           document.execCommand('copy');
-          showToast("Kode data.js berhasil disalin!");
+          showToast("Kode data.js disalin.");
         });
       };
     }
@@ -1497,13 +1385,13 @@ window.RT_DATA = ${JSON.stringify(currentData, null, 2)};
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        showToast("File data.js berhasil diunduh. Siap di-upload ke GitHub Pages!");
+        showToast("File data.js berhasil diunduh.");
       };
     }
   };
 
   // ----------------------------------------------------------------------------
-  // 8. MOBILE HAMBURGER MENU
+  // 8. MENU MOBILE
   // ----------------------------------------------------------------------------
   const initMobileMenu = () => {
     const menuBtn = document.getElementById('mobile-menu-btn');
@@ -1524,7 +1412,7 @@ window.RT_DATA = ${JSON.stringify(currentData, null, 2)};
   };
 
   // ----------------------------------------------------------------------------
-  // RENDER ALL MODULES
+  // BOOTSTRAP
   // ----------------------------------------------------------------------------
   const renderAll = () => {
     initIdentityAndHero();
@@ -1537,7 +1425,6 @@ window.RT_DATA = ${JSON.stringify(currentData, null, 2)};
     refreshIcons();
   };
 
-  // First run
   renderAll();
   initAuthAndSyncModals();
   initMobileMenu();
