@@ -37,7 +37,7 @@ window.RT_DATA = {
     // Kontak & Kesekretariatan
     alamatSekretariat: "Balai Warga RT 04 / RW 03, Jl. Melati Raya No. 12",
     jamPelayanan: "Senin - Sabtu: 08.00 - 21.00 WIB",
-    email: "rt05rw03.sukamaju@gmail.com"
+    email: "rt04rw03.sukamaju@gmail.com"
   },
 
   // 2. STATISTIK LINGKUNGAN WARGA
