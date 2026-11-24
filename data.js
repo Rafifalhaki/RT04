@@ -571,5 +571,12 @@ KTP Digital mempermudah urusan administrasi tanpa perlu lagi fotokopi KTP fisik.
       prosesWaktu: "Segera / Prioritas Layanan",
       biaya: "GRATIS / Tidak Dipungut Biaya"
     }
-  ]
+  ],
+
+  // 10. AKUN LOGIN PENGURUS & ADMIN RT
+  auth: {
+    adminUsername: "admin",
+    adminPassword: "adminrt04",
+    roleName: "Pengurus Inti RT 04"
+  }
 };
