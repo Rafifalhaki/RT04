@@ -66,7 +66,7 @@
         <button id="btn-open-login" type="button" class="inline-flex items-center gap-1 text-slate-300 hover:text-white font-medium transition-colors cursor-pointer">
           <i data-lucide="lock" class="w-3 h-3 text-slate-400"></i> Login Pengurus
         </button>
-        <div id="topbar-admin-pill" class="hidden items-center gap-1.5 bg-amber-400 text-slate-950 px-2 py-0.5 rounded font-bold text-[11px]">
+        <div id="topbar-admin-pill" class="hidden items-center gap-1.5 bg-amber-400 text-slate-950 px-3 py-1.5 rounded-md font-bold text-[11px]">
           <i data-lucide="shield-check" class="w-3 h-3"></i>
           <span>Mode Pengurus</span>
           <button id="btn-topbar-logout" type="button" class="ml-1 text-slate-900 hover:text-rose-900 underline font-semibold" title="Keluar">Keluar</button>
@@ -241,7 +241,7 @@
           <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Pengurus Rukun Tetangga 04</h2>
         </div>
         <div class="flex items-center gap-2.5">
-          <button id="btn-tambah-pengurus" type="button" class="admin-only hidden inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-md shadow-xs transition-colors cursor-pointer">
+          <button id="btn-tambah-pengurus" type="button" class="admin-only hidden inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-md shadow-xs transition-colors cursor-pointer">
             <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> + Tambah Pengurus
           </button>
           <div class="text-xs text-slate-500">Masa Bakti Periode 2024 – 2029</div>
@@ -314,11 +314,11 @@
 
         <!-- Filter & Tombol Admin -->
         <div class="flex flex-wrap items-center gap-2.5">
-          <button id="btn-tambah-kas" type="button" class="admin-only hidden inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-md shadow-xs transition-colors cursor-pointer">
+          <button id="btn-tambah-kas" type="button" class="admin-only hidden inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-md shadow-xs transition-colors cursor-pointer">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah Transaksi
           </button>
 
-          <div class="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-md border border-slate-200 text-xs font-medium text-slate-700">
+          <div class="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-md border border-slate-200 text-xs font-medium text-slate-700">
             <span>Periode:</span>
             <select id="kas-filter-bulan" class="bg-transparent font-semibold text-slate-900 focus:outline-none cursor-pointer">
               <option value="all">Semua Periode</option>
@@ -327,7 +327,7 @@
             </select>
           </div>
 
-          <button id="btn-export-csv" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-md border border-slate-200 shadow-2xs transition-colors">
+          <button id="btn-export-csv" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-md border border-slate-200 shadow-2xs transition-colors">
             <i data-lucide="download" class="w-3.5 h-3.5 text-slate-500"></i> Unduh CSV
           </button>
         </div>
@@ -444,16 +444,16 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-          <button id="btn-tambah-pengumuman" type="button" class="admin-only hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors cursor-pointer">
+          <button id="btn-tambah-pengumuman" type="button" class="admin-only hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors cursor-pointer">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i> Buat Pengumuman
           </button>
           
-          <div id="pengumuman-filter-btns" class="flex flex-wrap gap-1.5 text-xs">
-            <button data-cat="all" class="filter-btn active px-2.5 py-1 rounded bg-slate-900 text-white font-medium">Semua</button>
-            <button data-cat="Kebersihan & Kesehatan" class="filter-btn px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Kerja Bakti</button>
-            <button data-cat="Kesehatan" class="filter-btn px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Posyandu</button>
-            <button data-cat="Keamanan" class="filter-btn px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Keamanan</button>
-            <button data-cat="Administrasi" class="filter-btn px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Administrasi</button>
+          <div id="pengumuman-filter-btns" class="flex flex-wrap gap-2 text-xs">
+            <button data-cat="all" class="filter-btn active px-3 py-1.5 rounded-md bg-slate-900 text-white font-medium">Semua</button>
+            <button data-cat="Kebersihan & Kesehatan" class="filter-btn px-3 py-1.5 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Kerja Bakti</button>
+            <button data-cat="Kesehatan" class="filter-btn px-3 py-1.5 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Posyandu</button>
+            <button data-cat="Keamanan" class="filter-btn px-3 py-1.5 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Keamanan</button>
+            <button data-cat="Administrasi" class="filter-btn px-3 py-1.5 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Administrasi</button>
           </div>
         </div>
       </div>
@@ -479,13 +479,13 @@
         </div>
 
         <!-- Tombol Admin & Pencarian Nama -->
-        <div class="flex items-center gap-2">
-          <button id="btn-edit-ronda" type="button" class="admin-only hidden inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-md text-xs font-semibold transition-colors cursor-pointer">
+        <div class="flex items-center gap-2.5">
+          <button id="btn-edit-ronda" type="button" class="admin-only hidden inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-md text-xs font-semibold transition-colors cursor-pointer">
             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Edit Jadwal
           </button>
           <div class="relative w-full sm:w-56">
-            <input id="ronda-search-input" type="text" placeholder="Ketik nama warga..." class="w-full pl-7 pr-3 py-1.5 text-xs rounded border border-slate-200 focus:outline-none focus:border-slate-800">
-            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2 top-2"></i>
+            <input id="ronda-search-input" type="text" placeholder="Ketik nama warga..." class="w-full pl-8 pr-3 py-2 text-xs rounded-md border border-slate-300 focus:outline-none focus:border-slate-800">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
           </div>
         </div>
       </div>
@@ -634,10 +634,10 @@
             Portal informasi digital lingkungan RT 04 Sukamaju. Dikelola secara sukarela oleh pengurus RT untuk transparansi, keterbukaan warga, dan ketertiban bersama.
           </p>
           <div class="flex items-center gap-2">
-            <a id="footer-wa-btn" href="#" target="_blank" rel="noopener" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] font-medium border border-slate-700">
+            <a id="footer-wa-btn" href="#" target="_blank" rel="noopener" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md text-xs font-medium border border-slate-700">
               Grup WhatsApp Warga
             </a>
-            <a id="footer-maps-btn" href="#" target="_blank" rel="noopener" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] font-medium border border-slate-700">
+            <a id="footer-maps-btn" href="#" target="_blank" rel="noopener" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md text-xs font-medium border border-slate-700">
               Peta Lokasi
             </a>
           </div>
@@ -695,7 +695,7 @@
       <div class="p-6">
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
           <div class="flex items-center gap-2">
-            <span id="modal-category" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+            <span id="modal-category" class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 border border-slate-200">
               Kategori
             </span>
             <span class="text-xs text-slate-500">• <span id="modal-date">-</span></span>
@@ -807,11 +807,11 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label for="kas-input-tgl" class="block font-semibold text-slate-700 mb-1">Tanggal <span class="text-rose-600">*</span></label>
-            <input type="date" id="kas-input-tgl" required class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800 font-mono">
+            <input type="date" id="kas-input-tgl" required class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800 font-mono">
           </div>
           <div>
             <label for="kas-input-kategori" class="block font-semibold text-slate-700 mb-1">Kategori <span class="text-rose-600">*</span></label>
-            <select id="kas-input-kategori" required class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800 bg-white">
+            <select id="kas-input-kategori" required class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800 bg-white">
               <option value="Iuran Warga">Iuran Warga</option>
               <option value="Donasi / Sumbangan">Donasi / Sumbangan</option>
               <option value="Operasional">Operasional RT</option>
@@ -877,7 +877,7 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label for="peng-input-kategori" class="block font-semibold text-slate-700 mb-1">Kategori <span class="text-rose-600">*</span></label>
-            <select id="peng-input-kategori" required class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800 bg-white">
+            <select id="peng-input-kategori" required class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800 bg-white">
               <option value="Kebersihan & Kesehatan">Kebersihan & Kesehatan</option>
               <option value="Kesehatan">Kesehatan / Posyandu</option>
               <option value="Keamanan">Keamanan & Ketertiban</option>
@@ -887,7 +887,7 @@
           </div>
           <div>
             <label for="peng-input-prioritas" class="block font-semibold text-slate-700 mb-1">Tingkat Urgensi</label>
-            <select id="peng-input-prioritas" class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800 bg-white">
+            <select id="peng-input-prioritas" class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800 bg-white">
               <option value="Rutin">Biasa / Rutin</option>
               <option value="Penting">Penting</option>
               <option value="Informasi">Informasi Warga</option>
@@ -898,11 +898,11 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label for="peng-input-tanggal" class="block font-semibold text-slate-700 mb-1">Tanggal <span class="text-rose-600">*</span></label>
-            <input type="text" id="peng-input-tanggal" required placeholder="Contoh: 29 November 2026" class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800">
+            <input type="text" id="peng-input-tanggal" required placeholder="Contoh: 29 November 2026" class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800">
           </div>
           <div>
             <label for="peng-input-waktu" class="block font-semibold text-slate-700 mb-1">Waktu</label>
-            <input type="text" id="peng-input-waktu" placeholder="07.00 WIB - Selesai" class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800">
+            <input type="text" id="peng-input-waktu" placeholder="07.00 WIB - Selesai" class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800">
           </div>
         </div>
 
@@ -951,7 +951,7 @@
       <form id="form-crud-ronda" class="space-y-3.5 text-xs">
         <div>
           <label for="ronda-select-hari" class="block font-semibold text-slate-700 mb-1">Hari Jaga</label>
-          <select id="ronda-select-hari" class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800 bg-white font-bold">
+          <select id="ronda-select-hari" class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800 bg-white font-bold">
             <option value="Senin">Senin</option>
             <option value="Selasa">Selasa</option>
             <option value="Rabu">Rabu</option>
@@ -964,17 +964,17 @@
 
         <div>
           <label for="ronda-input-koor" class="block font-semibold text-slate-700 mb-1">Nama Koordinator</label>
-          <input type="text" id="ronda-input-koor" required class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800 font-semibold">
+          <input type="text" id="ronda-input-koor" required class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800 font-semibold">
         </div>
 
         <div>
           <label for="ronda-input-kontak" class="block font-semibold text-slate-700 mb-1">No. Kontak Koordinator</label>
-          <input type="tel" id="ronda-input-kontak" required class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800">
+          <input type="tel" id="ronda-input-kontak" required class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800">
         </div>
 
         <div>
           <label for="ronda-input-anggota" class="block font-semibold text-slate-700 mb-1">Daftar Petugas (1 nama per baris)</label>
-          <textarea id="ronda-input-anggota" rows="6" required class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800 font-mono text-[11px]"></textarea>
+          <textarea id="ronda-input-anggota" rows="6" required class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800 font-mono text-[11px]"></textarea>
         </div>
 
         <div class="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
@@ -1010,7 +1010,7 @@
 
         <div>
           <label for="pengurus-input-tipe" class="block font-semibold text-slate-700 mb-1">Kategori Kepengurusan <span class="text-rose-600">*</span></label>
-          <select id="pengurus-input-tipe" class="w-full px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-slate-800 bg-white font-semibold">
+          <select id="pengurus-input-tipe" class="w-full px-3 py-2 rounded-md border border-slate-300 focus:outline-none focus:border-slate-800 bg-white font-semibold">
             <option value="pengurusInti">Pengurus Inti (Ketua / Sekretaris / Bendahara)</option>
             <option value="penasehat">Dewan Penasehat RT</option>
             <option value="seksiKerja">Seksi Bidang Kerja (Kepemudaan, Lingkungan, Sosial, Humas)</option>
@@ -1085,7 +1085,7 @@
         <p>Perubahan yang baru saja Anda buat telah aktif di browser ini. Untuk memperbarui website publik di GitHub Pages:</p>
         <ol class="list-decimal list-inside space-y-1 bg-slate-50 p-3 rounded border border-slate-200 font-medium text-slate-700">
           <li>Klik <strong>"Unduh data.js Terbaru"</strong> di bawah.</li>
-          <li>Ganti file <code class="bg-white px-1 border border-slate-200 rounded">data.js</code> lama di repository GitHub Anda dengan file ini.</li>
+          <li>Ganti file <code class="bg-white px-2 py-0.5 border border-slate-200 rounded font-mono">data.js</code> lama di repository GitHub Anda dengan file ini.</li>
           <li>Website seluruh warga akan ter-update otomatis dalam 1 menit.</li>
         </ol>
 
@@ -1117,22 +1117,22 @@
         <span class="text-slate-400 hidden sm:inline">• CRUD Kas, Pengumuman & Siskamling</span>
       </div>
       <div class="flex flex-wrap items-center gap-2">
-        <button id="toolbar-btn-kelola-pengurus" class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer">
+        <button id="toolbar-btn-kelola-pengurus" class="px-3.5 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer">
           + Pengurus
         </button>
-        <button id="toolbar-btn-tambah-kas" class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer">
+        <button id="toolbar-btn-tambah-kas" class="px-3.5 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer">
           + Kas
         </button>
-        <button id="toolbar-btn-tambah-pengumuman" class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer">
+        <button id="toolbar-btn-tambah-pengumuman" class="px-3.5 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer">
           + Pengumuman
         </button>
-        <button id="toolbar-btn-sync-data" class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer" title="Simpan ke GitHub">
+        <button id="toolbar-btn-sync-data" class="px-3.5 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors cursor-pointer" title="Simpan ke GitHub">
           Sinkron ke GitHub
         </button>
-        <button id="toolbar-btn-reset-data" class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition-colors cursor-pointer" title="Reset ke data awal">
+        <button id="toolbar-btn-reset-data" class="px-3.5 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition-colors cursor-pointer" title="Reset ke data awal">
           Reset
         </button>
-        <button id="toolbar-btn-logout" class="px-3 py-1.5 rounded bg-rose-900 hover:bg-rose-800 text-white font-bold transition-colors cursor-pointer">
+        <button id="toolbar-btn-logout" class="px-3.5 py-2 rounded bg-rose-900 hover:bg-rose-800 text-white font-bold transition-colors cursor-pointer">
           Keluar
         </button>
       </div>
