@@ -219,12 +219,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const footerMapsBtn = document.getElementById('footer-maps-btn');
 
     if (footerTitle) footerTitle.textContent = `${info.namaRT} / ${info.namaRW}`;
-    if (footerSub) footerSub.textContent = `Kel. ${info.kelurahan}, Kec. ${info.kecamatan}, ${info.kota}`;
+    if (footerSub) footerSub.textContent = `${info.perumahan || 'Pondok Tirta Mandala'}, Kel. ${info.kelurahan}, Kec. ${info.kecamatan}, ${info.kota}`;
     if (footerDesc) footerDesc.textContent = info.deskripsi;
     if (footerAlamat) footerAlamat.textContent = info.alamatSekretariat;
     if (footerJam) footerJam.textContent = info.jamPelayanan;
     if (footerEmail) footerEmail.textContent = info.email;
-    if (footerCopy) footerCopy.textContent = `Rukun Tetangga 04 / RW 03 Kelurahan ${info.kelurahan}`;
+    if (footerCopy) footerCopy.textContent = `${info.namaRT} / ${info.namaRW} ${info.perumahan || 'Pondok Tirta Mandala'}`;
     if (footerWaBtn && info.linkGrupWargaWA) footerWaBtn.href = info.linkGrupWargaWA;
     if (footerMapsBtn && info.linkGoogleMaps) footerMapsBtn.href = info.linkGoogleMaps;
 
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2. PROFIL & STRUKTUR PENGURUS
   // ----------------------------------------------------------------------------
   const initProfilAndPengurus = () => {
-    const { visiMisi, pengurus } = currentData;
+    const { visiMisi, penasehat, pengurusInti, seksiKerja } = currentData;
 
     const visiEl = document.getElementById('profil-visi');
     if (visiEl) visiEl.textContent = `"${visiMisi.visi}"`;
@@ -253,28 +253,99 @@ document.addEventListener('DOMContentLoaded', () => {
       `).join('');
     }
 
+    // 1. Dewan Penasehat
+    const penasehatGrid = document.getElementById('penasehat-grid');
+    if (penasehatGrid && penasehat) {
+      penasehatGrid.innerHTML = penasehat.map(p => `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center gap-3">
+          <div class="w-8 h-8 rounded bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">
+            <i data-lucide="shield" class="w-4 h-4 text-slate-700"></i>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">${p.jabatan}</div>
+            <div class="text-xs sm:text-sm font-bold text-slate-900">${p.nama}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 2. Pengurus Inti
     const pengurusGrid = document.getElementById('pengurus-grid');
-    if (pengurusGrid) {
-      pengurusGrid.innerHTML = pengurus.map(p => {
+    if (pengurusGrid && pengurusInti) {
+      pengurusGrid.innerHTML = pengurusInti.map(p => {
         const waText = encodeURIComponent(`Halo ${p.nama} (${p.jabatan}), perkenalkan saya warga RT 04.`);
         return `
           <div class="civic-card p-5 flex flex-col justify-between">
             <div>
-              <div class="flex items-start justify-between gap-3 mb-3">
-                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
+              <div class="flex items-start justify-between gap-3 mb-2">
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-900 text-white">
                   ${p.jabatan}
                 </span>
-                <span class="text-[10px] font-mono text-slate-400">${p.periode}</span>
+                <span class="text-[10px] font-mono text-slate-400">Pengurus Inti</span>
               </div>
-              <h4 class="font-bold text-slate-900 text-sm mb-1">${p.nama}</h4>
+              <h4 class="font-bold text-slate-900 text-base mb-2">${p.nama}</h4>
               <p class="text-xs text-slate-600 mb-4 leading-relaxed bg-slate-50 p-2.5 rounded border border-slate-100">
-                ${p.tugasUtama}
+                ${p.tugas}
               </p>
             </div>
             
             <a href="https://wa.me/${p.whatsapp}?text=${waText}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-white hover:bg-slate-900 text-slate-700 hover:text-white rounded-md text-xs font-semibold border border-slate-300 transition-colors">
-              <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Hubungi via WhatsApp
+              <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Hubungi WhatsApp
             </a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 3. Seksi-Seksi Kerja & Humas Blok
+    const seksiGrid = document.getElementById('seksi-grid');
+    if (seksiGrid && seksiKerja) {
+      seksiGrid.innerHTML = seksiKerja.map(s => {
+        const hasBlok = s.perwakilanBlok && s.perwakilanBlok.length > 0;
+        const waText = encodeURIComponent(`Halo ${s.koordinator} (${s.namaSeksi}), perkenalkan saya warga RT 04.`);
+        return `
+          <div class="civic-card p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
+                  ${s.namaSeksi}
+                </span>
+                <span class="text-xs font-bold text-slate-900">${s.koordinator}</span>
+              </div>
+              
+              <p class="text-xs text-slate-500 mb-3">${s.keterangan}</p>
+              
+              <div class="mb-3">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Ruang Lingkup Bidang:</span>
+                <ul class="space-y-1 text-xs text-slate-700">
+                  ${s.subBidang.map(sub => `
+                    <li class="flex items-center gap-1.5">
+                      <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> ${sub}
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+
+              ${hasBlok ? `
+                <div class="mt-3 pt-3 border-t border-slate-100">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2">Perwakilan Koordinator Blok:</span>
+                  <div class="grid grid-cols-2 gap-1.5 text-xs">
+                    ${s.perwakilanBlok.map(b => `
+                      <div class="p-1.5 bg-slate-50 rounded border border-slate-200 flex items-center justify-between">
+                        <span class="font-bold text-slate-800 text-[11px]">${b.blok}</span>
+                        <span class="text-slate-600 text-[11px]">${b.nama}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="pt-3 mt-3 border-t border-slate-100">
+              <a href="https://wa.me/${s.whatsapp}?text=${waText}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded text-xs font-semibold border border-slate-200 transition-colors">
+                <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Hubungi ${s.koordinator.split(' ')[0]}
+              </a>
+            </div>
           </div>
         `;
       }).join('');
