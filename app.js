@@ -228,6 +228,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (footerWaBtn && info.linkGrupWargaWA) footerWaBtn.href = info.linkGrupWargaWA;
     if (footerMapsBtn && info.linkGoogleMaps) footerMapsBtn.href = info.linkGoogleMaps;
 
+    const ketua = (currentData.pengurusInti && currentData.pengurusInti[0]) || { nama: 'Agus Cholif', whatsapp: '6281200000000' };
+    const heroKetua = document.getElementById('hero-ketua-nama');
+    const heroSekretariat = document.getElementById('hero-sekretariat');
+    const heroJam = document.getElementById('hero-jam-layanan');
+    const heroWaBtn = document.getElementById('hero-wa-btn');
+
+    if (heroKetua) heroKetua.textContent = ketua.nama;
+    if (heroSekretariat) heroSekretariat.textContent = info.alamatSekretariat || 'Balai Warga Blok B';
+    if (heroJam) heroJam.textContent = info.jamPelayanan || '18.30 – 21.00 WIB';
+    if (heroWaBtn && ketua.whatsapp) {
+      const waText = encodeURIComponent(`Halo Bpk. ${ketua.nama} (Ketua RT 04), perkenalkan saya warga Pondok Tirta Mandala.`);
+      heroWaBtn.href = `https://wa.me/${ketua.whatsapp}?text=${waText}`;
+    }
+
     const copyrightYear = document.getElementById('copyright-year');
     if (copyrightYear) copyrightYear.textContent = new Date().getFullYear();
   };
@@ -1666,6 +1680,22 @@ Dikirim melalui Portal Warga RT 04 Sukamaju`;
     if (btnTopbarLogout) btnTopbarLogout.onclick = handleLogout;
     if (toolbarBtnLogout) toolbarBtnLogout.onclick = handleLogout;
     if (toolbarBtnResetData) toolbarBtnResetData.onclick = resetData;
+
+    // Toggle lihat/sembunyikan kata sandi
+    const btnTogglePw = document.getElementById('btn-toggle-pw');
+    const inputAdminPw = document.getElementById('admin-password');
+    const iconTogglePw = document.getElementById('icon-toggle-pw');
+    if (btnTogglePw && inputAdminPw) {
+      btnTogglePw.onclick = () => {
+        const isPw = inputAdminPw.type === 'password';
+        inputAdminPw.type = isPw ? 'text' : 'password';
+        btnTogglePw.setAttribute('title', isPw ? 'Sembunyikan Kata Sandi' : 'Lihat Kata Sandi');
+        if (iconTogglePw) {
+          iconTogglePw.setAttribute('data-lucide', isPw ? 'eye-off' : 'eye');
+          refreshIcons();
+        }
+      };
+    }
 
     if (formAdminLogin) {
       formAdminLogin.onsubmit = (e) => {

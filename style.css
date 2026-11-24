@@ -3,7 +3,7 @@
    Bersih, fungsional, berwibawa, tanpa efek AI-slop / gradien berlebihan
    ============================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
   --civic-green: #14532d;       /* Forest green tua berwibawa */
@@ -12,6 +12,7 @@
   --civic-bg: #f8fafc;
   --civic-card: #ffffff;
   --civic-border: #e2e8f0;
+  --civic-border-strong: #cbd5e1;
   --civic-text-main: #0f172a;
   --civic-text-muted: #475569;
 }
@@ -30,6 +31,7 @@ body {
 
 .font-mono-num {
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-feature-settings: "tnum" 1, "cv01" 1;
 }
 
 /* Custom Scrollbar - Minimal & Bersih */
@@ -59,15 +61,15 @@ body {
 /* Kartu Bersih & Berstruktur (Tanpa bayangan berlebihan) */
 .civic-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--civic-border);
   border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .civic-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-color: var(--civic-border-strong);
+  box-shadow: 0 4px 8px -2px rgba(15, 23, 42, 0.06);
 }
 
 /* Tab Ronda */
@@ -119,7 +121,7 @@ body {
 
 /* Status Table Civic */
 .ledger-table th {
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 /* Cetak / Print Styles */
