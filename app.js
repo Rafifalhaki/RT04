@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const topbarInfo = document.getElementById('topbar-info');
     if (topbarInfo) {
-      topbarInfo.textContent = `Rukun Tetangga 04 • Rukun Warga 03 • Kelurahan ${info.kelurahan} • ${info.kota}`;
+      topbarInfo.textContent = `${info.namaRT} / ${info.namaRW} • ${info.perumahan || 'Pondok Tirta Mandala'} • ${info.kelurahan}, ${info.kecamatan}, ${info.kota}`;
     }
 
     const topbarWaLink = document.getElementById('topbar-wa-link');
@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="pt-3 mt-3 border-t border-slate-100">
               <a href="https://wa.me/${s.whatsapp}?text=${waText}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded text-xs font-semibold border border-slate-200 transition-colors">
-                <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Hubungi ${s.koordinator.split(' ')[0]}
+                <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Hubungi WhatsApp
               </a>
             </div>
           </div>
