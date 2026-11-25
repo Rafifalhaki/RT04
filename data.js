@@ -19,7 +19,7 @@ window.RT_DATA = {
     provinsi: "Jawa Barat",
     kodePos: "16415",
     slogan: "Bersih, Nyaman, Religius",
-    deskripsi: "Portal informasi resmi dan pelayanan warga RT 04 / RW 17 Perumahan Pondok Tirta Mandala, Kelurahan Sukamaju, Cilodong, Depok. Wadah transparansi kas, agenda warga, siskamling, dan layanan administrasi.",
+    deskripsi: "Portal informasi resmi dan pelayanan warga RT 04 / RW 17 Perumahan Pondok Tirta Mandala, Kelurahan Sukamaju, Cilodong, Depok. Wadah transparansi kas, agenda warga, kontak darurat, dan layanan administrasi.",
     logo: "./assets/images/logo-rt04.jpg",
     
     // Kontak WhatsApp resmi pengurus untuk form laporan warga
@@ -50,7 +50,7 @@ window.RT_DATA = {
     visi: "Terwujudnya lingkungan RT 04 / RW 17 Pondok Tirta Mandala yang Bersih, Nyaman, dan Religius berlandaskan semangat kebersamaan dan gotong royong.",
     misi: [
       "Menciptakan lingkungan perumahan yang bersih, asri, dan terawat melalui pengelolaan sampah dan sarana prasarana yang baik.",
-      "Menjamin rasa aman dan nyaman bagi seluruh keluarga warga melalui siskamling dan koordinasi keamanan yang terpadu.",
+      "Menjamin rasa aman dan nyaman bagi seluruh keluarga warga melalui koordinasi keamanan lingkungan yang terpadu.",
       "Meningkatkan kerukunan, toleransi, dan kegiatan keagamaan serta sosial kemasyarakatan antar warga.",
       "Mewujudkan sistem administrasi dan pengelolaan keuangan kas RT yang terbuka, transparan, dan dapat diakses setiap saat.",
       "Memberdayakan potensi kepemudaan dalam bidang olahraga, pendidikan, dan kreativitas lingkungan."
@@ -110,7 +110,7 @@ window.RT_DATA = {
         "Sarana & Prasarana Fasum",
         "Perawatan & Inventarisasi Aset RT"
       ],
-      keterangan: "Pengawasan pos kamling siskamling, pemeliharaan lampu jalan, saluran air, dan sarana umum perumahan."
+      keterangan: "Pengawasan pos kamling dan ketertiban lingkungan, pemeliharaan lampu penerangan jalan, saluran air got, dan inventaris fasilitas umum."
     },
     {
       namaSeksi: "Seksi Sosial",

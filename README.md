@@ -85,16 +85,16 @@ Pengurus RT hanya perlu membuka dan mengedit file **`data.js`** menggunakan teks
 3. **Memperbarui Pengumuman Kegiatan:**
    Cari bagian `pengumuman` dan edit judul, tanggal, serta isi pengumuman.
 
-4. **Memperbarui Jadwal Ronda:**
-   Cari bagian `jadwalRonda.harian` untuk menambah atau mengganti daftar warga yang bertugas siskamling dari hari Senin hingga Minggu.
+4. **Kontak Darurat Lingkungan:**
+   Cari bagian `kontakDarurat` untuk memperbarui nomor telepon darurat polsek, babinsa, damkar, atau ambulans.
 
 ---
 
 ## ✨ Fitur Unggulan
 
-- **Mobile First & Super Cepat:** Nyaman dibuka dari smartphone warga lewat link grup WhatsApp.
-- **Transparansi Kas Real-Time:** Filter per bulan, pencarian transaksi, grafik Chart.js, serta tombol **Export ke CSV/Excel**.
-- **Jadwal Ronda Pintar:** Otomatis menampilkan jadwal hari ini dan fitur pencarian nama warga yang bertugas.
+- **Desain Fresh, Modern & Ramah Warga:** Visual bernuansa hijau asri, modern, segar, tidak kaku/minimalis, dan nyaman dibuka dari ponsel.
+- **Transparansi Kas Real-Time:** Filter per bulan, pencarian transaksi, visualisasi grafik Chart.js, serta tombol **Export ke CSV/Excel**.
+- **Kontak Darurat Cepat:** Akses instan nomor darurat kepolisian, ambulans, dan pos damkar hanya dengan sekali klik.
 - **Form Pengaduan Otomatis WhatsApp:** Laporan warga otomatis diformat rapi dan membuka aplikasi WhatsApp Ketua RT tanpa server backend.
 - **Aman & Privasi Terjaga:** Tidak ada risiko kebocoran database karena 100% Client-Side.
 - **100% Kompatibel Subpath GitHub Pages:** Menggunakan relative path (`./`) sehingga tidak akan error 404 saat di-refresh.

@@ -8,16 +8,16 @@ web
 
 ## Users
 
-- **Warga RT 04 / RW 17 Perumahan Pondok Tirta Mandala** (Blok P, Q, R, S, dan Al-Hikmah 1): Mayoritas mengakses portal lewat smartphone dari tautan grup WhatsApp untuk memantau saldo kas RT, membaca agenda pengumuman, memeriksa jadwal siskamling, mengecek syarat surat pengantar, dan mengirimkan aspirasi/laporan ke pengurus.
-- **Pengurus RT 04 (Ketua RT, Sekretaris, Bendahara, Seksi-Seksi, dan Koordinator Humas Blok)**: Mengelola pencatatan kas secara mandiri dan memperbarui jadwal ronda serta pengumuman secara real-time.
+- **Warga RT 04 / RW 17 Perumahan Pondok Tirta Mandala** (Blok P, Q, R, S, dan Al-Hikmah 1): Mayoritas mengakses portal lewat smartphone dari tautan grup WhatsApp untuk memantau saldo kas RT, membaca agenda pengumuman, mengakses kontak darurat cepat, mengecek syarat surat pengantar, dan mengirimkan aspirasi/laporan ke pengurus.
+- **Pengurus RT 04 (Ketua RT, Sekretaris, Bendahara, Seksi-Seksi, dan Koordinator Humas Blok)**: Mengelola pencatatan kas secara mandiri dan memperbarui data pengurus serta pengumuman secara real-time.
 
 ## Product Purpose
 
-Menyediakan portal pelayanan warga dan transparansi keuangan lingkungan tingkat RT yang akuntabel, bebas hambatan teknis, cepat, dan dapat diakses publik 24 jam secara gratis di GitHub Pages tanpa ketergantungan pada backend server rumit atau database pihak ketiga.
+Menyediakan portal pelayanan warga dan transparansi keuangan lingkungan tingkat RT yang akuntabel, bebas hambatan teknis, cepat, segar (fresh modern civic), dan dapat diakses publik 24 jam secara gratis di GitHub Pages tanpa ketergantungan pada backend server rumit atau database pihak ketiga.
 
 ## Positioning
 
-Satu-satunya sistem portal lingkungan warga perumahan yang memadukan transparansi pembukuan kas ala Buku Kas Umum (BKU), jadwal siskamling dinamis, dan kanal pengaduan WhatsApp langsung ke pengurus tanpa risiko kebocoran data pribadi (100% Client-Side Architecture).
+Sistem portal lingkungan warga perumahan yang memadukan transparansi pembukuan kas ala Buku Kas Umum (BKU), kontak darurat siaga 24 jam, informasi kepengurusan terstruktur, dan kanal pengaduan WhatsApp langsung ke pengurus tanpa risiko kebocoran data pribadi (100% Client-Side Architecture).
 
 ## Operating Context
 
@@ -28,11 +28,11 @@ Satu-satunya sistem portal lingkungan warga perumahan yang memadukan transparans
 ## Capabilities and Constraints
 
 - **Kapabilitas**:
-  - Tampilan publik tanpa login bagi seluruh warga.
-  - Mode otentikasi pengurus (admin login) untuk manajemen data CRUD Kas, Pengumuman, dan Jadwal Ronda.
-  - Visualisasi grafik arus kas bulanan berbasis Chart.js monokromatik/editorial.
+  - Tampilan publik tanpa login bagi seluruh warga dengan desain segar dan ramah warga (fresh modern civic).
+  - Mode otentikasi pengurus (admin login) untuk manajemen data CRUD Kas, Pengumuman, dan Struktur Pengurus RT.
+  - Visualisasi grafik arus kas bulanan berbasis Chart.js modern dan informatif.
   - Fitur ekspor mutasi kas ke format CSV untuk audit pembukuan fisik.
-  - Integrasi pesan terstruktur ke WhatsApp API (`wa.me`) tanpa server backend.
+  - Integrasi kontak darurat instan dan kanal pesan WhatsApp (`wa.me`) tanpa server backend.
 - **Batasan**:
   - Static Site murni di-hosting di GitHub Pages (`https://rafifalhaki.github.io/RT04/`).
   - Seluruh path aset wajib relative (`./assets/...`).

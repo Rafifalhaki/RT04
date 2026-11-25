@@ -1,31 +1,34 @@
 /* ==============================================================================
-   PORTAL WARGA RT 04 - DESAIN CIVIC EDITORIAL & GROUNDED
-   Bersih, fungsional, berwibawa, tanpa efek AI-slop / gradien berlebihan
+   PORTAL WARGA RT 04 - DESAIN FRESH, VIBRANT & MODERN CIVIC
+   Segar, humanis, rapi, ramah warga, bernuansa asri & terpercaya
    ============================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --civic-green: #14532d;       /* Forest green tua berwibawa */
-  --civic-green-hover: #0f3d21;
-  --civic-accent: #15803d;
-  --civic-bg: #f8fafc;
-  --civic-card: #ffffff;
-  --civic-border: #e2e8f0;
-  --civic-border-strong: #cbd5e1;
-  --civic-text-main: #0f172a;
-  --civic-text-muted: #475569;
+  --primary-emerald: #047857;       /* Emerald 700 - Contrast 4.85:1 vs #fff */
+  --primary-emerald-hover: #065f46; /* Emerald 800 */
+  --primary-teal: #0f766e;          /* Teal 700 - Contrast 4.82:1 vs #fff */
+  --accent-amber: #b45309;          /* Amber 700 */
+  --accent-rose: #be123c;           /* Rose 700 - Contrast 6.2:1 vs #fff */
+  --accent-sky: #0369a1;            /* Sky 700 */
+  --bg-main: #f8fafc;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-border-hover: #cbd5e1;
+  --text-main: #0f172a;
+  --text-muted: #475569;
 }
 
 html {
   scroll-behavior: smooth;
-  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background-color: var(--civic-bg);
-  color: var(--civic-text-main);
+  background-color: var(--bg-main);
+  color: var(--text-main);
   line-height: 1.6;
 }
 
@@ -34,10 +37,10 @@ body {
   font-feature-settings: "tnum" 1, "cv01" 1;
 }
 
-/* Custom Scrollbar - Minimal & Bersih */
+/* Custom Scrollbar - Fresh & Modern */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -46,37 +49,77 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 3px;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 
-/* Header Masthead */
-.masthead-border {
-  border-bottom: 2px solid #0f172a;
+/* Hero Background Mesh Effect */
+.hero-fresh-bg {
+  background-color: #ffffff;
+  background-image: 
+    radial-gradient(at 10% 15%, rgba(16, 185, 129, 0.08) 0px, transparent 55%),
+    radial-gradient(at 90% 20%, rgba(13, 148, 136, 0.08) 0px, transparent 55%),
+    radial-gradient(at 50% 95%, rgba(2, 132, 199, 0.05) 0px, transparent 60%);
 }
 
-/* Kartu Bersih & Berstruktur (Tanpa bayangan berlebihan) */
+/* Kartu Fresh & Berdimensi Lembut */
 .civic-card {
   background: #ffffff;
-  border: 1px solid var(--civic-border);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.2s ease;
 }
 
 .civic-card:hover {
-  border-color: var(--civic-border-strong);
-  box-shadow: 0 4px 8px -2px rgba(15, 23, 42, 0.06);
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.07), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  transform: translateY(-2px);
 }
 
-/* Tab Ronda */
-.tab-day-btn.active {
-  background-color: #0f172a;
+/* Tombol Fresh Modern - Contrast AA Compliant (>= 4.5:1) */
+.btn-fresh-primary {
+  background: linear-gradient(135deg, #047857 0%, #0f766e 100%);
   color: #ffffff;
-  border-color: #0f172a;
+  font-weight: 700;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px -2px rgba(4, 120, 87, 0.25);
+}
+
+.btn-fresh-primary:hover {
+  background: linear-gradient(135deg, #065f46 0%, #115e59 100%);
+  box-shadow: 0 6px 16px -2px rgba(4, 120, 87, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-fresh-secondary {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-fresh-secondary:hover {
+  background-color: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+/* Filter Tag Pills */
+.filter-btn {
+  transition: all 0.15s ease;
+}
+
+.filter-btn.active {
+  background-color: #047857 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px -1px rgba(4, 120, 87, 0.3);
 }
 
 /* Modal Simple & Responsive */
@@ -92,8 +135,9 @@ body {
 }
 
 .modal-content {
-  transform: scale(0.98);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.96);
+  border-radius: 20px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal-backdrop.active .modal-content {
@@ -119,9 +163,17 @@ body {
   transform: rotate(180deg);
 }
 
-/* Status Table Civic */
+/* Status Table Modern */
 .ledger-table th {
   letter-spacing: 0.04em;
+}
+
+.ledger-table tr {
+  transition: background-color 0.12s ease;
+}
+
+.ledger-table tbody tr:hover {
+  background-color: #f8fafc;
 }
 
 /* Cetak / Print Styles */
