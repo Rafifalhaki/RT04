@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroPill = document.getElementById('hero-pill');
 
     if (heroTitle) {
-      heroTitle.textContent = `Pusat Informasi & Pelayanan Digital Warga ${info.namaRT} Sukamaju`;
+      heroTitle.innerHTML = `Portal Warta, Transparansi Kas & <span class="text-emerald-700">Pelayanan Warga ${info.namaRT}</span>`;
     }
     if (heroDesc) heroDesc.textContent = info.deskripsi;
     if (heroPill) heroPill.textContent = `Portal Resmi Lingkungan ${info.namaRT} / ${info.namaRW}`;
@@ -505,10 +505,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const penasehatGrid = document.getElementById('penasehat-grid');
     if (penasehatGrid && penasehat) {
       penasehatGrid.innerHTML = penasehat.map((p, idx) => `
-        <div class="p-4 bg-gradient-to-r from-indigo-50/70 to-slate-50 border border-indigo-100 rounded-xl flex items-center justify-between gap-3 shadow-2xs hover:border-indigo-300 transition-all">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
-              <i data-lucide="shield" class="w-4 h-4 text-indigo-700"></i>
+        <div class="civic-card p-4.5 bg-gradient-to-r from-indigo-50/70 via-white to-slate-50 border border-indigo-100 rounded-2xl flex items-center justify-between gap-3 shadow-2xs hover:border-indigo-300 transition-all">
+          <div class="flex items-center gap-3.5">
+            <div class="squircle-icon w-10 h-10 bg-indigo-100 text-indigo-700 font-bold text-xs shrink-0 shadow-2xs">
+              <i data-lucide="shield" class="w-5 h-5 text-indigo-700"></i>
             </div>
             <div>
               <div class="text-[10px] uppercase font-bold text-indigo-700 tracking-wider">${p.jabatan}</div>
@@ -539,14 +539,14 @@ document.addEventListener('DOMContentLoaded', () => {
       pengurusGrid.innerHTML = pengurusInti.map((p, idx) => {
         const waText = encodeURIComponent(`Halo ${p.nama} (${p.jabatan}), perkenalkan saya warga RT 04.`);
         return `
-          <div class="civic-card p-6 flex flex-col justify-between border border-slate-200/90 hover:border-emerald-200">
+          <div class="civic-card p-6 flex flex-col justify-between border border-slate-200/90 hover:border-emerald-300 shadow-xs hover:shadow-md transition-all">
             <div>
-              <div class="flex items-start justify-between gap-3 mb-3">
-                <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-600 text-white shadow-2xs">
+              <div class="flex items-start justify-between gap-3 mb-3.5">
+                <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-700 text-white shadow-2xs">
                   ${p.jabatan}
                 </span>
                 <div class="flex items-center gap-1.5">
-                  <span class="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">Inti RT</span>
+                  <span class="text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">Inti RT</span>
                   ${isAuth ? `
                     <button type="button" class="btn-edit-inti inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold border border-slate-200 transition-colors cursor-pointer" data-idx="${idx}" title="Ubah Nama/Nomor HP">
                       <i data-lucide="edit-3" class="w-3 h-3"></i> Edit
@@ -555,15 +555,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
               </div>
               <h4 class="font-extrabold text-slate-900 text-base mb-1">${p.nama}</h4>
-              <div class="text-xs font-mono text-emerald-700 mb-3 flex items-center gap-1.5 font-medium">
+              <div class="text-xs font-mono text-emerald-700 mb-3.5 flex items-center gap-1.5 font-medium">
                 <i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-600"></i> +${p.whatsapp}
               </div>
-              <p class="text-xs text-slate-600 mb-5 leading-relaxed bg-slate-50/80 p-3.5 rounded-xl border border-slate-100">
+              <p class="text-xs text-slate-600 mb-5 leading-relaxed bg-slate-50/90 p-3.5 rounded-xl border border-slate-100">
                 ${p.tugas}
               </p>
             </div>
             
-            <a href="https://wa.me/${p.whatsapp}?text=${waText}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-3 bg-emerald-50 hover:bg-emerald-600 text-emerald-800 hover:text-white rounded-xl text-xs font-bold border border-emerald-200 hover:border-emerald-600 transition-all shadow-2xs">
+            <a href="https://wa.me/${p.whatsapp}?text=${waText}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-3 bg-emerald-50 hover:bg-emerald-700 text-emerald-800 hover:text-white rounded-xl text-xs font-bold border border-emerald-200 hover:border-emerald-700 transition-all shadow-2xs">
               <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Hubungi via WhatsApp
             </a>
           </div>
@@ -587,9 +587,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const hasBlok = s.perwakilanBlok && s.perwakilanBlok.length > 0;
         const waText = encodeURIComponent(`Halo ${s.koordinator} (${s.namaSeksi}), perkenalkan saya warga RT 04.`);
         return `
-          <div class="civic-card p-6 flex flex-col justify-between border border-slate-200/90 hover:border-teal-200">
+          <div class="civic-card p-6 flex flex-col justify-between border border-slate-200/90 hover:border-teal-300 shadow-xs hover:shadow-md transition-all">
             <div>
-              <div class="flex items-start justify-between gap-2 mb-2">
+              <div class="flex items-start justify-between gap-2 mb-3">
                 <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
                   ${s.namaSeksi}
                 </span>
@@ -603,17 +603,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
               </div>
 
-              <div class="text-xs font-mono text-teal-700 mb-2.5 flex items-center gap-1.5 font-medium">
+              <div class="text-xs font-mono text-teal-700 mb-3 flex items-center gap-1.5 font-medium">
                 <i data-lucide="phone" class="w-3.5 h-3.5 text-teal-600"></i> +${s.whatsapp}
               </div>
               
               <p class="text-xs text-slate-600 mb-4 leading-relaxed">${s.keterangan}</p>
               
-              <div class="mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">Ruang Lingkup Bidang:</span>
+              <div class="mb-4 bg-slate-50/90 p-3 rounded-xl border border-slate-100">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2">Ruang Lingkup Bidang:</span>
                 <div class="flex flex-wrap gap-1.5">
                   ${s.subBidang.map(sub => `
-                    <span class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[11px] font-medium text-slate-700 flex items-center gap-1">
+                    <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-[11px] font-medium text-slate-700 flex items-center gap-1 shadow-2xs">
                       <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> ${sub}
                     </span>
                   `).join('')}
@@ -626,7 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-800">
                       Koordinator Humas Wilayah Blok:
                     </span>
-                    <span class="text-[10px] font-semibold text-emerald-700">${s.perwakilanBlok.length} Blok</span>
+                    <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">${s.perwakilanBlok.length} Blok</span>
                   </div>
                   <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     ${s.perwakilanBlok.map(b => `
@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
               ` : ''}
             </div>
 
-            <a href="https://wa.me/${s.whatsapp}?text=${waText}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-teal-600 text-slate-700 hover:text-white rounded-xl text-xs font-bold border border-slate-200 hover:border-teal-600 transition-all shadow-2xs">
+            <a href="https://wa.me/${s.whatsapp}?text=${waText}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-teal-700 text-slate-700 hover:text-white rounded-xl text-xs font-bold border border-slate-200 hover:border-teal-700 transition-all shadow-2xs">
               <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Hubungi Koordinator
             </a>
           </div>
@@ -1228,13 +1228,13 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (item.kategori.includes('Administrasi')) badgeColor = 'bg-sky-50 text-sky-800 border-sky-200';
 
         return `
-        <div class="civic-card p-6 flex flex-col justify-between group cursor-pointer border border-slate-200/90 hover:border-emerald-200" data-id="${item.id}">
+        <div class="civic-card p-6 flex flex-col justify-between group cursor-pointer border border-slate-200/90 hover:border-emerald-300 shadow-xs hover:shadow-md transition-all" data-id="${item.id}">
           <div>
-            <div class="flex items-center justify-between gap-2 mb-3">
+            <div class="flex items-center justify-between gap-2 mb-3.5">
               <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${badgeColor}">
                 ${item.kategori}
               </span>
-              <span class="text-[10px] font-mono text-slate-500 flex items-center gap-1 font-medium">
+              <span class="text-[10px] font-mono text-slate-500 flex items-center gap-1.5 font-medium bg-slate-50 px-2 py-0.5 rounded-md border border-slate-100">
                 <i data-lucide="calendar" class="w-3 h-3 text-slate-400"></i> ${item.tanggal}
               </span>
             </div>
@@ -1248,9 +1248,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </p>
           </div>
 
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span class="font-bold text-emerald-700 group-hover:underline inline-flex items-center gap-1">
-              Baca Warta <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          <div class="pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="font-bold text-emerald-700 group-hover:text-emerald-800 inline-flex items-center gap-1.5 transition-colors">
+              Baca Warta <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"></i>
             </span>
             ${isAuth ? `
               <div class="flex items-center gap-1">
@@ -1323,14 +1323,14 @@ document.addEventListener('DOMContentLoaded', () => {
       daruratGrid.innerHTML = kontakDarurat.map(k => {
         const hasWa = k.whatsapp && k.whatsapp.length > 0;
         return `
-          <div class="civic-card p-5 flex flex-col justify-between border-rose-100 hover:border-rose-300 shadow-xs hover:shadow-md transition-all">
+          <div class="civic-card p-5.5 flex flex-col justify-between border-rose-100/90 hover:border-rose-300 shadow-xs hover:shadow-md transition-all">
             <div>
-              <div class="flex items-center justify-between gap-2 mb-3">
+              <div class="flex items-center justify-between gap-2 mb-3.5">
                 <span class="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
                   ${k.kategori}
                 </span>
-                <div class="w-7 h-7 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center">
-                  <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+                <div class="squircle-icon w-8 h-8 bg-rose-100 text-rose-700">
+                  <i data-lucide="phone-call" class="w-4 h-4"></i>
                 </div>
               </div>
               <h4 class="font-extrabold text-slate-900 text-sm mb-1">${k.nama}</h4>
@@ -1338,7 +1338,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="pt-3 border-t border-slate-100 space-y-2">
-              <a href="tel:${k.telepon}" class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-mono font-bold transition-all shadow-xs shadow-rose-600/20">
+              <a href="tel:${k.telepon}" class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-3 bg-rose-700 hover:bg-rose-800 text-white rounded-xl text-xs font-mono font-bold transition-all shadow-xs shadow-rose-700/20">
                 <i data-lucide="phone" class="w-3.5 h-3.5"></i> Hubungi: ${k.telepon}
               </a>
               ${hasWa ? `

@@ -1,9 +1,9 @@
 /* ==============================================================================
-   PORTAL WARGA RT 04 - DESAIN FRESH, VIBRANT & MODERN CIVIC
-   Segar, humanis, rapi, ramah warga, bernuansa asri & terpercaya
+   PORTAL WARGA RT 04 - ULTRA MODERN CIVIC DESIGN SYSTEM
+   Fresh, humanis, berdimensi, elegan, responsif & ramah warga
    ============================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
   --primary-emerald: #047857;       /* Emerald 700 - Contrast 4.85:1 vs #fff */
@@ -14,8 +14,8 @@
   --accent-sky: #0369a1;            /* Sky 700 */
   --bg-main: #f8fafc;
   --card-bg: #ffffff;
-  --card-border: #e2e8f0;
-  --card-border-hover: #cbd5e1;
+  --card-border: rgba(226, 232, 240, 0.9);
+  --card-border-hover: rgba(4, 120, 87, 0.35);
   --text-main: #0f172a;
   --text-muted: #475569;
 }
@@ -30,6 +30,7 @@ body {
   background-color: var(--bg-main);
   color: var(--text-main);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 .font-mono-num {
@@ -37,10 +38,16 @@ body {
   font-feature-settings: "tnum" 1, "cv01" 1;
 }
 
-/* Custom Scrollbar - Fresh & Modern */
+/* Custom Selection */
+::selection {
+  background-color: #047857;
+  color: #ffffff;
+}
+
+/* Custom Scrollbar - Modern Slim */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -56,30 +63,79 @@ body {
   background: #94a3b8;
 }
 
-/* Hero Background Mesh Effect */
+/* Hero Modern Background with Ambient Mesh Gradients */
 .hero-fresh-bg {
   background-color: #ffffff;
   background-image: 
     radial-gradient(at 10% 15%, rgba(16, 185, 129, 0.08) 0px, transparent 55%),
     radial-gradient(at 90% 20%, rgba(13, 148, 136, 0.08) 0px, transparent 55%),
-    radial-gradient(at 50% 95%, rgba(2, 132, 199, 0.05) 0px, transparent 60%);
+    radial-gradient(at 50% 90%, rgba(2, 132, 199, 0.05) 0px, transparent 60%);
 }
 
-/* Kartu Fresh & Berdimensi Lembut */
+/* Ambient Glow Orbs for Modern Depth */
+.ambient-glow-emerald {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0) 70%);
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-glow-teal {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(13, 148, 136, 0.10) 0%, rgba(13, 148, 136, 0) 70%);
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Kartu Modern Berdimensi Halus (Soft Multi-layered Shadows & Borders) */
 .civic-card {
   background: #ffffff;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  border-radius: 16px;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-              border-color 0.2s ease;
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  box-shadow: 
+    0 1px 2px 0 rgba(15, 23, 42, 0.03),
+    0 4px 16px -2px rgba(15, 23, 42, 0.03);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.22s ease;
+  position: relative;
 }
 
 .civic-card:hover {
-  border-color: rgba(16, 185, 129, 0.35);
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.07), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-  transform: translateY(-2px);
+  border-color: var(--card-border-hover);
+  box-shadow: 
+    0 16px 32px -8px rgba(15, 23, 42, 0.08), 
+    0 6px 12px -4px rgba(4, 120, 87, 0.06);
+  transform: translateY(-3px);
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* Icon Squircles with Soft Shadows */
+.squircle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  transition: transform 0.2s ease;
+}
+
+.civic-card:hover .squircle-icon {
+  transform: scale(1.05);
 }
 
 /* Tombol Fresh Modern - Contrast AA Compliant (>= 4.5:1) */
@@ -88,45 +144,75 @@ body {
   color: #ffffff;
   font-weight: 700;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 12px -2px rgba(4, 120, 87, 0.25);
+  box-shadow: 0 4px 14px -2px rgba(4, 120, 87, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .btn-fresh-primary:hover {
   background: linear-gradient(135deg, #065f46 0%, #115e59 100%);
-  box-shadow: 0 6px 16px -2px rgba(4, 120, 87, 0.35);
-  transform: translateY(-1px);
+  box-shadow: 0 8px 20px -2px rgba(4, 120, 87, 0.45);
+  transform: translateY(-2px);
+  color: #ffffff;
+}
+
+.btn-fresh-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px -1px rgba(4, 120, 87, 0.3);
 }
 
 .btn-fresh-secondary {
   background-color: #ffffff;
-  color: #1e293b;
+  color: #0f172a;
   border: 1px solid #cbd5e1;
-  font-weight: 600;
-  transition: all 0.2s ease;
+  font-weight: 700;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .btn-fresh-secondary:hover {
   background-color: #f0fdf4;
   border-color: #86efac;
-  color: #166534;
+  color: #065f46;
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
 }
 
-/* Filter Tag Pills */
+.btn-fresh-secondary:active {
+  transform: translateY(0);
+}
+
+/* Modern Segmented Control / Filter Pills */
+.segmented-control {
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
 .filter-btn {
-  transition: all 0.15s ease;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
 }
 
 .filter-btn.active {
   background-color: #047857 !important;
   color: #ffffff !important;
-  box-shadow: 0 2px 8px -1px rgba(4, 120, 87, 0.3);
+  box-shadow: 0 3px 10px -1px rgba(4, 120, 87, 0.4);
 }
 
-/* Modal Simple & Responsive */
+/* Modal Simple, Smooth & Responsive */
 .modal-backdrop {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .modal-backdrop.active {
@@ -135,20 +221,22 @@ body {
 }
 
 .modal-content {
-  transform: scale(0.96);
-  border-radius: 20px;
+  transform: scale(0.95);
+  border-radius: 26px;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
 }
 
 .modal-backdrop.active .modal-content {
   transform: scale(1);
 }
 
-/* Accordion */
+/* Accordion Smooth Expand */
 .accordion-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: max-height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .accordion-content.expanded {
@@ -156,7 +244,7 @@ body {
 }
 
 .accordion-chevron {
-  transition: transform 0.2s ease;
+  transition: transform 0.22s ease;
 }
 
 .accordion-chevron.rotated {
@@ -169,11 +257,17 @@ body {
 }
 
 .ledger-table tr {
-  transition: background-color 0.12s ease;
+  transition: background-color 0.14s ease;
 }
 
 .ledger-table tbody tr:hover {
-  background-color: #f8fafc;
+  background-color: #f0fdf4;
+}
+
+/* Focus styles for clean accessibility */
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible {
+  outline: none;
+  ring: 3px;
 }
 
 /* Cetak / Print Styles */
